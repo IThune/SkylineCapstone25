@@ -24,9 +24,11 @@ param ShellScriptParameters object = {}
 
 //Secrets
 //TODO Azure Key Vault for secure storage and retrieval of secrets
-param TempUsername string = 'tempAdmin'
-#disable-next-line secure-secrets-in-params
-param TempPassword string = 'Opnsense'
+param AdminUsername string = 'admin'
+@secure()
+param AdminPassword string
+@secure()
+param GithubURIAccessKey string
 
 //Network Interfaces
 var untrustedNicName = '${virtualMachineName}-Untrusted-NIC'
@@ -67,8 +69,8 @@ resource OPNsense 'Microsoft.Compute/virtualMachines@2023-07-01' = {
   properties: {
     osProfile: {
       computerName: virtualMachineName
-      adminUsername: TempUsername
-      adminPassword: TempPassword
+      adminUsername: AdminUsername 
+      adminPassword: AdminPassword 
     }
     hardwareProfile: {
       vmSize: virtualMachineSize
@@ -131,8 +133,9 @@ resource vmext 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = {
      $3 = WALinuxVersion
      $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
      $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
+     $6 = the secret value to access the private github repo URI
     */
-      commandToExecute: 'sh ${ShellScriptName} ${ShellScriptParameters.OpnScriptURI} ${ShellScriptParameters.OpnVersion} ${ShellScriptParameters.WALinuxVersion} ${ShellScriptParameters.TrustedSubnetName} ${ShellScriptParameters.ManagementSubnetName}'
+      commandToExecute: 'sh ${ShellScriptName} ${ShellScriptParameters.OpnScriptURI} ${ShellScriptParameters.OpnVersion} ${ShellScriptParameters.WALinuxVersion} ${ShellScriptParameters.TrustedSubnetName} ${ShellScriptParameters.ManagementSubnetName} ${ShellScriptParameters.GithubRepoKey}'
     }
   }
 }

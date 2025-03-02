@@ -44,6 +44,13 @@ param OPNsenseBootstrapScriptName string = 'configure-opnsense.sh'
 param OPNsenseVersion string = '25.1'
 param WALinuxVersion string = '2.12.0.4'  //Azure Linux guest agent
 
+//OPNsense Secret Parameters
+param AdminUsername string = 'admin'
+@secure()
+param AdminPassword string
+@secure()
+param GithubRepoKey string
+
 //Network Security Group parameters
 param UntrustedNSGName string = 'untrusted-nsg'
 
@@ -141,6 +148,8 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
   name: OPNsenseVirtualMachineName
   params: {
     Location: location
+    AdminPassword: AdminPassword
+    GithubURIAccessKey: GithubRepoKey
     /*
      Script Params
      $1 = OPNScriptURI
@@ -148,6 +157,7 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
      $3 = WALinuxVersion
      $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
      $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
+     $6 = the secret value to access the private github repo URI
     */
     ShellScriptParameters: {
       OpnScriptURI: OPNsenseBootstrapURI
