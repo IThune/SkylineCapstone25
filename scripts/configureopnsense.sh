@@ -9,6 +9,7 @@
 # $6 = github token to download files from the private repo
 # $7 = file name of the OPNsense config file, default config.xml
 # $8 = file name of the python script to find gateway, default get_nic_gw.py
+# $9 = file name of the waagent actions configuration file, default waagent_actions.conf
 
 # install curl to download files from github easier
 pkg install -y curl
@@ -55,6 +56,11 @@ cd WALinuxAgent-$3/
 python3 setup.py install --register-service --lnx-distro=freebsd --force
 cd ..
 
+# Download the actions configuration
+curl -H "Authorization: Bearer $6" \
+    -H 'Accept: application/vnd.github.v3.raw' \
+    -O \
+    -L "$1$8"
 # make a link to python3 binary, disable disk swap, and set the actions configuration
 ln -s /usr/local/bin/python3.11 /usr/local/bin/python
 sed -i "" 's/ResourceDisk.EnableSwap=y/ResourceDisk.EnableSwap=n/' /etc/waagent.conf

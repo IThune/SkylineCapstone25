@@ -30,6 +30,7 @@ param ShellScriptName string
      $6 = github token to download files from the private repo
      $7 = file name of the OPNsense config file, default config.xml
      $8 = file name of the python script to find gateway, default get_nic_gw.py
+     $9 = file name of the waagent actions configuration file, default waagent_actions.conf
     */
 param OPNVersion string
 param OPNScriptURI string
@@ -40,6 +41,7 @@ param ManagementSubnetName string
 param GithubPrivateToken string
 param OPNsenseConfigXML string
 param PythonGatewayScript string
+param WAAgentActionsConfig string
 
 var scriptParams = [ 
   OPNVersion
@@ -50,6 +52,7 @@ var scriptParams = [
   GithubPrivateToken
   OPNsenseConfigXML
   PythonGatewayScript
+  WAAgentActionsConfig
 ]
 
 var runShellScriptCommand = 'sh ${ShellScriptName} ${join(scriptParams, ' ')}'
