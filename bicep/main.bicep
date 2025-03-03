@@ -39,12 +39,13 @@ param OPNsenseVirtualMachineSize string = 'Standard_B1s'  //Smallest size VM, fr
 param OPNsenseVirtualMachineName string = 'skyline-gateway'
 
 //OPNsense Bootstrap parameters
-param OPNsenseBootstrapURI string = ''  //TODO make a shell script wrapper & custom OPNsense config.xml file for the opnsense-boostrap.sh script
+param OPNsenseBootstrapURI string = 'https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/'
 param OPNsenseBootstrapScriptName string = 'configure-opnsense.sh'
 param OPNsenseVersion string = '25.1'
 param WALinuxVersion string = '2.12.0.4'  //Azure Linux guest agent
 param OPNsenseConfigXMLName string = 'config.xml'
 param PythonGatewayScript string = 'get_nic_gw.py'
+param AzureAgentActionsConfig string = 'actions_waagent.conf'
 
 //OPNsense Secret Parameters
 param AdminUsername string = 'admin'
@@ -167,6 +168,7 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
      $6 = github token to download files from the private repo
      $7 = file name of the OPNsense config file, default config.xml
      $8 = file name of the python script to find gateway, default get_nic_gw.py
+     $9 = waagent actions config file
     */
     OPNScriptURI: OPNsenseBootstrapURI
     OPNVersion: OPNsenseVersion
@@ -176,6 +178,7 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
     GithubPrivateToken: GithubPrivateToken 
     OPNsenseConfigXML: OPNsenseConfigXMLName
     PythonGatewayScript: PythonGatewayScript
+    WAAgentActionsConfig: AzureAgentActionsConfig
 
     //Networking parameters
     //multiNicSupport: true

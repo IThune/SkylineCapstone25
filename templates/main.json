@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.33.93.31351",
-      "templateHash": "1654252372745326569"
+      "templateHash": "5136655470583385277"
     }
   },
   "parameters": {
@@ -98,7 +98,7 @@
     },
     "OPNsenseBootstrapURI": {
       "type": "string",
-      "defaultValue": ""
+      "defaultValue": "https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/"
     },
     "OPNsenseBootstrapScriptName": {
       "type": "string",
@@ -119,6 +119,10 @@
     "PythonGatewayScript": {
       "type": "string",
       "defaultValue": "get_nic_gw.py"
+    },
+    "AzureAgentActionsConfig": {
+      "type": "string",
+      "defaultValue": "actions_waagent.conf"
     },
     "AdminUsername": {
       "type": "string",
@@ -469,6 +473,9 @@
           "PythonGatewayScript": {
             "value": "[parameters('PythonGatewayScript')]"
           },
+          "WAAgentActionsConfig": {
+            "value": "[parameters('AzureAgentActionsConfig')]"
+          },
           "trustedSubnetId": {
             "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', split(parameters('TrustedSubnetName'), '/')[0], split(parameters('TrustedSubnetName'), '/')[1])]"
           },
@@ -498,7 +505,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.33.93.31351",
-              "templateHash": "13864348384786638049"
+              "templateHash": "5670308226446415288"
             }
           },
           "parameters": {
@@ -561,6 +568,9 @@
             "PythonGatewayScript": {
               "type": "string"
             },
+            "WAAgentActionsConfig": {
+              "type": "string"
+            },
             "AdminUsername": {
               "type": "string"
             },
@@ -577,7 +587,8 @@
               "[parameters('ManagementSubnetName')]",
               "[parameters('GithubPrivateToken')]",
               "[parameters('OPNsenseConfigXML')]",
-              "[parameters('PythonGatewayScript')]"
+              "[parameters('PythonGatewayScript')]",
+              "[parameters('WAAgentActionsConfig')]"
             ],
             "runShellScriptCommand": "[format('sh {0} {1}', parameters('ShellScriptName'), join(variables('scriptParams'), ' '))]",
             "untrustedNicName": "[format('{0}-Untrusted-NIC', parameters('virtualMachineName'))]",

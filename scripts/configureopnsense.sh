@@ -34,8 +34,6 @@ sed -i "" "s_zzz.zzz.zzz.zzz_$5_" $7
 cp $7 /usr/local/etc/config.xml
 
 #Download OPNSense Bootstrap and Permit Root Remote Login
-# fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in
-#fetch https://raw.githubusercontent.com/opnsense/update/7ba940e0d57ece480540c4fd79e9d99a87f222c8/src/bootstrap/opnsense-bootstrap.sh.in
 fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in
 sed -i "" 's/#PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
 
@@ -60,11 +58,10 @@ cd ..
 curl -H "Authorization: Bearer $6" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -O \
-    -L "$1$8"
+    -L "$1$9"
 # make a link to python3 binary, disable disk swap, and set the actions configuration
 ln -s /usr/local/bin/python3.11 /usr/local/bin/python
 sed -i "" 's/ResourceDisk.EnableSwap=y/ResourceDisk.EnableSwap=n/' /etc/waagent.conf
-fetch $1actions_waagent.conf
 cp actions_waagent.conf /usr/local/opnsense/service/conf/actions.d
 
 # Installing bash - This is a requirement for Azure custom Script extension to run
