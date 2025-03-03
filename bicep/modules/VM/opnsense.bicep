@@ -14,21 +14,51 @@ param trustedNsgId string = ''
 //General parameters
 param virtualMachineName string
 param virtualMachineSize string
-param multiNicSupport bool
+//param multiNicSupport bool
 param Location string = resourceGroup().location
 
 //Bootstrap shell script parameters
-param OPNScriptURI string
 param ShellScriptName string
-param ShellScriptParameters object = {}
+
+    /*
+     Script Params
+     $1 = OPNScriptURI - URI to the private github repo that contains config files and scripts, must end in '/'
+     $2 = OpnVersion - The version of OPNsense to install to this system
+     $3 = WALinuxVersion - The version of the Azure Linux Agent to install to this system
+     $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
+     $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
+     $6 = github token to download files from the private repo
+     $7 = file name of the OPNsense config file, default config.xml
+     $8 = file name of the python script to find gateway, default get_nic_gw.py
+    */
+param OPNVersion string
+param OPNScriptURI string
+param WALinuxVersion string
+param TrustedSubnetName string
+param ManagementSubnetName string
+@secure()
+param GithubPrivateToken string
+param OPNsenseConfigXML string
+param PythonGatewayScript string
+
+var scriptParams = [ 
+  OPNVersion
+  OPNScriptURI
+  WALinuxVersion
+  TrustedSubnetName
+  ManagementSubnetName
+  GithubPrivateToken
+  OPNsenseConfigXML
+  PythonGatewayScript
+]
+
+var runShellScriptCommand = 'sh ${ShellScriptName} ${join(scriptParams, ' ')}'
 
 //Secrets
 //TODO Azure Key Vault for secure storage and retrieval of secrets
-param AdminUsername string = 'admin'
-@secure()
+param AdminUsername string
+@secure() 
 param AdminPassword string
-@secure()
-param GithubURIAccessKey string
 
 //Network Interfaces
 var untrustedNicName = '${virtualMachineName}-Untrusted-NIC'
@@ -126,20 +156,11 @@ resource vmext 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = {
       fileUris: [
         '${OPNScriptURI}${ShellScriptName}'
       ]
-    /*
-     Script Params
-     $1 = OPNScriptURI
-     $2 = OpnVersion
-     $3 = WALinuxVersion
-     $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
-     $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
-     $6 = the secret value to access the private github repo URI
-    */
-      commandToExecute: 'sh ${ShellScriptName} ${ShellScriptParameters.OpnScriptURI} ${ShellScriptParameters.OpnVersion} ${ShellScriptParameters.WALinuxVersion} ${ShellScriptParameters.TrustedSubnetName} ${ShellScriptParameters.ManagementSubnetName} ${ShellScriptParameters.GithubRepoKey}'
+    commandToExecute: runShellScriptCommand
     }
   }
 }
 output untrustedNicIP string = untrustedNic.outputs.nicIP
-output trustedNicIP string = multiNicSupport == true ? trustedNic.outputs.nicIP : ''
+output trustedNicIP string = trustedNic.outputs.nicIP
 output untrustedNicIPv4ProfileId string = untrustedNic.outputs.nicIPv4ConfigId
 output untrustedNicIPv6ProfileId string = untrustedNic.outputs.nicIPv6ConfigId

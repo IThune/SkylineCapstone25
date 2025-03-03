@@ -1,0 +1,948 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.33.93.31351",
+      "templateHash": "1654252372745326569"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "SkynetVirtualNetworkName": {
+      "type": "string",
+      "defaultValue": "SKYNET"
+    },
+    "SkynetIPv4AddressPrefix": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/16"
+    },
+    "SkynetIPv6AddressPrefix": {
+      "type": "string",
+      "defaultValue": "fd00:6f08:7be9::/48"
+    },
+    "SkynetAddressSpace": {
+      "type": "array",
+      "defaultValue": [
+        "[parameters('SkynetIPv4AddressPrefix')]",
+        "[parameters('SkynetIPv6AddressPrefix')]"
+      ]
+    },
+    "TrustedIPv4Subnet": {
+      "type": "string",
+      "defaultValue": "10.0.0.0/24"
+    },
+    "TrustedIPv6Subnet": {
+      "type": "string",
+      "defaultValue": "fd00:6f08:7be9::/64"
+    },
+    "TrustedSubnetName": {
+      "type": "string",
+      "defaultValue": "trusted"
+    },
+    "UntrustedIPv4Subnet": {
+      "type": "string",
+      "defaultValue": "10.0.255.224/27"
+    },
+    "UntrustedIPv6Subnet": {
+      "type": "string",
+      "defaultValue": "fd00:6f08:7be9:ffff::/64"
+    },
+    "UntrustedSubnetName": {
+      "type": "string",
+      "defaultValue": "untrusted"
+    },
+    "ManagementIPv4Subnet": {
+      "type": "string",
+      "defaultValue": "10.0.100.0/27"
+    },
+    "ManagementIPv6Subnet": {
+      "type": "string",
+      "defaultValue": "fd00:6f08:7be9:ff::/64"
+    },
+    "ManagementSubnetName": {
+      "type": "string",
+      "defaultValue": "management"
+    },
+    "PublicIPDeploymentName": {
+      "type": "string",
+      "defaultValue": "SkylinePublicIP"
+    },
+    "PublicIPv4AddressName": {
+      "type": "string",
+      "defaultValue": "skyline-public-ipv4"
+    },
+    "PublicIPv6AddressName": {
+      "type": "string",
+      "defaultValue": "skyline-public-ipv6"
+    },
+    "PublicIPv4DNSLabel": {
+      "type": "string",
+      "defaultValue": "skyline"
+    },
+    "PublicIPv6DNSLabel": {
+      "type": "string",
+      "defaultValue": "skyline6"
+    },
+    "OPNsenseVirtualMachineSize": {
+      "type": "string",
+      "defaultValue": "Standard_B1s"
+    },
+    "OPNsenseVirtualMachineName": {
+      "type": "string",
+      "defaultValue": "skyline-gateway"
+    },
+    "OPNsenseBootstrapURI": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "OPNsenseBootstrapScriptName": {
+      "type": "string",
+      "defaultValue": "configure-opnsense.sh"
+    },
+    "OPNsenseVersion": {
+      "type": "string",
+      "defaultValue": "25.1"
+    },
+    "WALinuxVersion": {
+      "type": "string",
+      "defaultValue": "2.12.0.4"
+    },
+    "OPNsenseConfigXMLName": {
+      "type": "string",
+      "defaultValue": "config.xml"
+    },
+    "PythonGatewayScript": {
+      "type": "string",
+      "defaultValue": "get_nic_gw.py"
+    },
+    "AdminUsername": {
+      "type": "string",
+      "defaultValue": "admin"
+    },
+    "AdminPassword": {
+      "type": "securestring"
+    },
+    "GithubPrivateToken": {
+      "type": "securestring"
+    },
+    "UntrustedNSGName": {
+      "type": "string",
+      "defaultValue": "untrusted-nsg"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[parameters('SkynetVirtualNetworkName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "vnetAddressSpace": {
+            "value": "[parameters('SkynetAddressSpace')]"
+          },
+          "vnetName": {
+            "value": "[parameters('SkynetVirtualNetworkName')]"
+          },
+          "subnets": {
+            "value": [
+              {
+                "name": "[parameters('TrustedSubnetName')]",
+                "properties": {
+                  "addressPrefixes": [
+                    "[parameters('TrustedIPv4Subnet')]",
+                    "[parameters('TrustedIPv6Subnet')]"
+                  ]
+                }
+              },
+              {
+                "name": "[parameters('UntrustedSubnetName')]",
+                "properties": {
+                  "addressPrefixes": [
+                    "[parameters('UntrustedIPv4Subnet')]",
+                    "[parameters('UntrustedIPv6Subnet')]"
+                  ]
+                }
+              },
+              {
+                "name": "[parameters('ManagementSubnetName')]",
+                "properties": {
+                  "addressPrefixes": [
+                    "[parameters('ManagementIPv4Subnet')]",
+                    "[parameters('ManagementIPv6Subnet')]"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.33.93.31351",
+              "templateHash": "17321072129593240204"
+            }
+          },
+          "parameters": {
+            "vnetAddressSpace": {
+              "type": "array"
+            },
+            "vnetName": {
+              "type": "string"
+            },
+            "subnets": {
+              "type": "array"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('vnetName')]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "addressSpace": {
+                  "addressPrefixes": "[parameters('vnetAddressSpace')]"
+                },
+                "subnets": "[parameters('subnets')]"
+              }
+            }
+          ],
+          "outputs": {
+            "vnetId": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+            },
+            "vnetName": {
+              "type": "string",
+              "value": "[parameters('vnetName')]"
+            },
+            "vnetSubnets": {
+              "type": "array",
+              "value": "[reference(resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName')), '2023-05-01').subnets]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[parameters('PublicIPDeploymentName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "publicIPv4Name": {
+            "value": "[parameters('PublicIPv4AddressName')]"
+          },
+          "publicIPv6Name": {
+            "value": "[parameters('PublicIPv6AddressName')]"
+          },
+          "DNSname": {
+            "value": "[parameters('PublicIPv4DNSLabel')]"
+          },
+          "DNSname6": {
+            "value": "[parameters('PublicIPv6DNSLabel')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.33.93.31351",
+              "templateHash": "4489896954272401351"
+            }
+          },
+          "parameters": {
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "DNSname": {
+              "type": "string"
+            },
+            "DNSname6": {
+              "type": "string"
+            },
+            "publicIPv4Name": {
+              "type": "string"
+            },
+            "publicIPv6Name": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('publicIPv4Name')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "Static",
+                "dnsSettings": {
+                  "domainNameLabel": "[parameters('DNSname')]"
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Network/publicIPAddresses",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('publicIPv6Name')]",
+              "location": "[parameters('location')]",
+              "sku": {
+                "name": "Standard"
+              },
+              "properties": {
+                "publicIPAllocationMethod": "Static",
+                "publicIPAddressVersion": "IPv6",
+                "dnsSettings": {
+                  "domainNameLabel": "[parameters('DNSname6')]"
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "publicIPv4Id": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPv4Name'))]"
+            },
+            "publicIPv4Address": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPv4Name')), '2023-05-01').ipAddress]"
+            },
+            "publicIPv6Id": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPv6Name'))]"
+            },
+            "publicIPv6Address": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPv6Name')), '2023-05-01').ipAddress]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[parameters('UntrustedNSGName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "nsgName": {
+            "value": "[parameters('UntrustedNSGName')]"
+          },
+          "Location": {
+            "value": "[parameters('location')]"
+          },
+          "securityRules": {
+            "value": [
+              {
+                "name": "InboundSSH",
+                "properties": {
+                  "description": "Locks down inbound SSH access to the firewall from the Internet. SSH is configured to listen on a non-default port number.",
+                  "protocol": "Tcp",
+                  "sourcePortRange": "*",
+                  "destinationPortRange": "58585",
+                  "sourceAddressPrefix": "*",
+                  "destinationAddressPrefix": "*",
+                  "access": "Allow",
+                  "priority": 10,
+                  "direction": "Inbound"
+                }
+              }
+            ]
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.33.93.31351",
+              "templateHash": "6825328002417115746"
+            }
+          },
+          "parameters": {
+            "nsgName": {
+              "type": "string"
+            },
+            "securityRules": {
+              "type": "array",
+              "defaultValue": []
+            },
+            "Location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Network/networkSecurityGroups",
+              "apiVersion": "2023-05-01",
+              "name": "[parameters('nsgName')]",
+              "location": "[parameters('Location')]",
+              "properties": {
+                "securityRules": "[parameters('securityRules')]"
+              }
+            }
+          ],
+          "outputs": {
+            "nsgID": {
+              "type": "string",
+              "value": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('nsgName'))]"
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "[parameters('OPNsenseVirtualMachineName')]",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "Location": {
+            "value": "[parameters('location')]"
+          },
+          "AdminUsername": {
+            "value": "[parameters('AdminUsername')]"
+          },
+          "AdminPassword": {
+            "value": "[parameters('AdminPassword')]"
+          },
+          "ShellScriptName": {
+            "value": "[parameters('OPNsenseBootstrapScriptName')]"
+          },
+          "OPNScriptURI": {
+            "value": "[parameters('OPNsenseBootstrapURI')]"
+          },
+          "OPNVersion": {
+            "value": "[parameters('OPNsenseVersion')]"
+          },
+          "WALinuxVersion": {
+            "value": "[parameters('WALinuxVersion')]"
+          },
+          "TrustedSubnetName": {
+            "value": "[parameters('TrustedSubnetName')]"
+          },
+          "ManagementSubnetName": {
+            "value": "[parameters('ManagementSubnetName')]"
+          },
+          "GithubPrivateToken": {
+            "value": "[parameters('GithubPrivateToken')]"
+          },
+          "OPNsenseConfigXML": {
+            "value": "[parameters('OPNsenseConfigXMLName')]"
+          },
+          "PythonGatewayScript": {
+            "value": "[parameters('PythonGatewayScript')]"
+          },
+          "trustedSubnetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', split(parameters('TrustedSubnetName'), '/')[0], split(parameters('TrustedSubnetName'), '/')[1])]"
+          },
+          "untrustedSubnetId": {
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', split(parameters('UntrustedSubnetName'), '/')[0], split(parameters('UntrustedSubnetName'), '/')[1])]"
+          },
+          "virtualMachineName": {
+            "value": "[parameters('OPNsenseVirtualMachineName')]"
+          },
+          "virtualMachineSize": {
+            "value": "[parameters('OPNsenseVirtualMachineSize')]"
+          },
+          "publicIPv4Id": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', parameters('PublicIPDeploymentName')), '2022-09-01').outputs.publicIPv4Id.value]"
+          },
+          "publicIPv6Id": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', parameters('PublicIPDeploymentName')), '2022-09-01').outputs.publicIPv6Id.value]"
+          },
+          "untrustedNsgId": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', parameters('UntrustedNSGName')), '2022-09-01').outputs.nsgID.value]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.33.93.31351",
+              "templateHash": "13864348384786638049"
+            }
+          },
+          "parameters": {
+            "untrustedSubnetId": {
+              "type": "string"
+            },
+            "trustedSubnetId": {
+              "type": "string"
+            },
+            "publicIPv4Id": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "publicIPv6Id": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "untrustedNsgId": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "trustedNsgId": {
+              "type": "string",
+              "defaultValue": ""
+            },
+            "virtualMachineName": {
+              "type": "string"
+            },
+            "virtualMachineSize": {
+              "type": "string"
+            },
+            "Location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "ShellScriptName": {
+              "type": "string"
+            },
+            "OPNVersion": {
+              "type": "string"
+            },
+            "OPNScriptURI": {
+              "type": "string"
+            },
+            "WALinuxVersion": {
+              "type": "string"
+            },
+            "TrustedSubnetName": {
+              "type": "string"
+            },
+            "ManagementSubnetName": {
+              "type": "string"
+            },
+            "GithubPrivateToken": {
+              "type": "securestring"
+            },
+            "OPNsenseConfigXML": {
+              "type": "string"
+            },
+            "PythonGatewayScript": {
+              "type": "string"
+            },
+            "AdminUsername": {
+              "type": "string"
+            },
+            "AdminPassword": {
+              "type": "securestring"
+            }
+          },
+          "variables": {
+            "scriptParams": [
+              "[parameters('OPNVersion')]",
+              "[parameters('OPNScriptURI')]",
+              "[parameters('WALinuxVersion')]",
+              "[parameters('TrustedSubnetName')]",
+              "[parameters('ManagementSubnetName')]",
+              "[parameters('GithubPrivateToken')]",
+              "[parameters('OPNsenseConfigXML')]",
+              "[parameters('PythonGatewayScript')]"
+            ],
+            "runShellScriptCommand": "[format('sh {0} {1}', parameters('ShellScriptName'), join(variables('scriptParams'), ' '))]",
+            "untrustedNicName": "[format('{0}-Untrusted-NIC', parameters('virtualMachineName'))]",
+            "trustedNicName": "[format('{0}-Trusted-NIC', parameters('virtualMachineName'))]"
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Compute/virtualMachines",
+              "apiVersion": "2023-07-01",
+              "name": "[parameters('virtualMachineName')]",
+              "location": "[parameters('Location')]",
+              "properties": {
+                "osProfile": {
+                  "computerName": "[parameters('virtualMachineName')]",
+                  "adminUsername": "[parameters('AdminUsername')]",
+                  "adminPassword": "[parameters('AdminPassword')]"
+                },
+                "hardwareProfile": {
+                  "vmSize": "[parameters('virtualMachineSize')]"
+                },
+                "storageProfile": {
+                  "osDisk": {
+                    "createOption": "FromImage",
+                    "managedDisk": {
+                      "storageAccountType": "StandardSSD_LRS"
+                    },
+                    "caching": "ReadWrite"
+                  },
+                  "imageReference": {
+                    "publisher": "thefreebsdfoundation",
+                    "offer": "freebsd-14_2",
+                    "sku": "14_2-release-amd64-gen2-ufs",
+                    "version": "latest"
+                  }
+                },
+                "networkProfile": {
+                  "networkInterfaces": [
+                    {
+                      "id": "[reference(resourceId('Microsoft.Resources/deployments', variables('untrustedNicName')), '2022-09-01').outputs.nicId.value]",
+                      "properties": {
+                        "primary": true
+                      }
+                    },
+                    {
+                      "id": "[reference(resourceId('Microsoft.Resources/deployments', variables('trustedNicName')), '2022-09-01').outputs.nicId.value]",
+                      "properties": {
+                        "primary": false
+                      }
+                    }
+                  ]
+                }
+              },
+              "plan": {
+                "name": "14_2-release-amd64-gen2-ufs",
+                "publisher": "thefreebsdfoundation",
+                "product": "freebsd-14_2"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('trustedNicName'))]",
+                "[resourceId('Microsoft.Resources/deployments', variables('untrustedNicName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Compute/virtualMachines/extensions",
+              "apiVersion": "2023-07-01",
+              "name": "[format('{0}/{1}', parameters('virtualMachineName'), 'CustomScript')]",
+              "location": "[parameters('Location')]",
+              "properties": {
+                "publisher": "Microsoft.OSTCExtensions",
+                "type": "CustomScriptForLinux",
+                "typeHandlerVersion": "1.5",
+                "autoUpgradeMinorVersion": false,
+                "settings": {
+                  "fileUris": [
+                    "[format('{0}{1}', parameters('OPNScriptURI'), parameters('ShellScriptName'))]"
+                  ],
+                  "commandToExecute": "[variables('runShellScriptCommand')]"
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "[variables('untrustedNicName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "Location": {
+                    "value": "[parameters('Location')]"
+                  },
+                  "nicName": {
+                    "value": "[variables('untrustedNicName')]"
+                  },
+                  "SubnetId": {
+                    "value": "[parameters('untrustedSubnetId')]"
+                  },
+                  "publicIPv4Id": {
+                    "value": "[parameters('publicIPv4Id')]"
+                  },
+                  "publicIPv6Id": {
+                    "value": "[parameters('publicIPv6Id')]"
+                  },
+                  "enableIPForwarding": {
+                    "value": true
+                  },
+                  "nsgId": {
+                    "value": "[parameters('untrustedNsgId')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.33.93.31351",
+                      "templateHash": "7017320440398433757"
+                    }
+                  },
+                  "parameters": {
+                    "Location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "nicName": {
+                      "type": "string"
+                    },
+                    "nsgId": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "enableIPForwarding": {
+                      "type": "bool",
+                      "defaultValue": false
+                    },
+                    "SubnetId": {
+                      "type": "string"
+                    },
+                    "publicIPv4Id": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "publicIPv6Id": {
+                      "type": "string",
+                      "defaultValue": ""
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/networkInterfaces",
+                      "apiVersion": "2023-05-01",
+                      "name": "[parameters('nicName')]",
+                      "location": "[parameters('Location')]",
+                      "properties": {
+                        "enableIPForwarding": "[parameters('enableIPForwarding')]",
+                        "networkSecurityGroup": {
+                          "id": "[parameters('nsgId')]"
+                        },
+                        "ipConfigurations": [
+                          {
+                            "name": "IPv4Config",
+                            "properties": {
+                              "subnet": {
+                                "id": "[parameters('SubnetId')]"
+                              },
+                              "privateIPAllocationMethod": "Dynamic",
+                              "publicIPAddress": "[if(equals(first(parameters('publicIPv4Id')), '/'), createObject('id', parameters('publicIPv4Id')), null())]"
+                            }
+                          },
+                          {
+                            "name": "IPv6Config",
+                            "properties": {
+                              "subnet": {
+                                "id": "[parameters('SubnetId')]"
+                              },
+                              "privateIPAllocationMethod": "Dynamic",
+                              "publicIPAddress": "[if(equals(first(parameters('publicIPv6Id')), '/'), createObject('id', parameters('publicIPv6Id')), null())]"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "nicName": {
+                      "type": "string",
+                      "value": "[parameters('nicName')]"
+                    },
+                    "nicId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))]"
+                    },
+                    "nicIP": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName')), '2023-05-01').ipConfigurations[0].properties.privateIPAddress]"
+                    },
+                    "nicIPv4ConfigId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName')), '2023-05-01').ipConfigurations[0].id]"
+                    },
+                    "nicIPv6ConfigId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName')), '2023-05-01').ipConfigurations[1].id]"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "[variables('trustedNicName')]",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "Location": {
+                    "value": "[parameters('Location')]"
+                  },
+                  "nicName": {
+                    "value": "[variables('trustedNicName')]"
+                  },
+                  "SubnetId": {
+                    "value": "[parameters('trustedSubnetId')]"
+                  },
+                  "enableIPForwarding": {
+                    "value": true
+                  },
+                  "nsgId": {
+                    "value": "[parameters('trustedNsgId')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.33.93.31351",
+                      "templateHash": "7017320440398433757"
+                    }
+                  },
+                  "parameters": {
+                    "Location": {
+                      "type": "string",
+                      "defaultValue": "[resourceGroup().location]"
+                    },
+                    "nicName": {
+                      "type": "string"
+                    },
+                    "nsgId": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "enableIPForwarding": {
+                      "type": "bool",
+                      "defaultValue": false
+                    },
+                    "SubnetId": {
+                      "type": "string"
+                    },
+                    "publicIPv4Id": {
+                      "type": "string",
+                      "defaultValue": ""
+                    },
+                    "publicIPv6Id": {
+                      "type": "string",
+                      "defaultValue": ""
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.Network/networkInterfaces",
+                      "apiVersion": "2023-05-01",
+                      "name": "[parameters('nicName')]",
+                      "location": "[parameters('Location')]",
+                      "properties": {
+                        "enableIPForwarding": "[parameters('enableIPForwarding')]",
+                        "networkSecurityGroup": {
+                          "id": "[parameters('nsgId')]"
+                        },
+                        "ipConfigurations": [
+                          {
+                            "name": "IPv4Config",
+                            "properties": {
+                              "subnet": {
+                                "id": "[parameters('SubnetId')]"
+                              },
+                              "privateIPAllocationMethod": "Dynamic",
+                              "publicIPAddress": "[if(equals(first(parameters('publicIPv4Id')), '/'), createObject('id', parameters('publicIPv4Id')), null())]"
+                            }
+                          },
+                          {
+                            "name": "IPv6Config",
+                            "properties": {
+                              "subnet": {
+                                "id": "[parameters('SubnetId')]"
+                              },
+                              "privateIPAllocationMethod": "Dynamic",
+                              "publicIPAddress": "[if(equals(first(parameters('publicIPv6Id')), '/'), createObject('id', parameters('publicIPv6Id')), null())]"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ],
+                  "outputs": {
+                    "nicName": {
+                      "type": "string",
+                      "value": "[parameters('nicName')]"
+                    },
+                    "nicId": {
+                      "type": "string",
+                      "value": "[resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))]"
+                    },
+                    "nicIP": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName')), '2023-05-01').ipConfigurations[0].properties.privateIPAddress]"
+                    },
+                    "nicIPv4ConfigId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName')), '2023-05-01').ipConfigurations[0].id]"
+                    },
+                    "nicIPv6ConfigId": {
+                      "type": "string",
+                      "value": "[reference(resourceId('Microsoft.Network/networkInterfaces', parameters('nicName')), '2023-05-01').ipConfigurations[1].id]"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "outputs": {
+            "untrustedNicIP": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('untrustedNicName')), '2022-09-01').outputs.nicIP.value]"
+            },
+            "trustedNicIP": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('trustedNicName')), '2022-09-01').outputs.nicIP.value]"
+            },
+            "untrustedNicIPv4ProfileId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('untrustedNicName')), '2022-09-01').outputs.nicIPv4ConfigId.value]"
+            },
+            "untrustedNicIPv6ProfileId": {
+              "type": "string",
+              "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('untrustedNicName')), '2022-09-01').outputs.nicIPv6ConfigId.value]"
+            }
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', parameters('PublicIPDeploymentName'))]",
+        "[resourceId('Microsoft.Resources/deployments', parameters('SkynetVirtualNetworkName'))]",
+        "[resourceId('Microsoft.Resources/deployments', parameters('UntrustedNSGName'))]"
+      ]
+    }
+  ]
+}

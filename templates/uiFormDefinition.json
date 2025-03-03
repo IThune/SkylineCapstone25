@@ -1,0 +1,524 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2021-09-09/uiFormDefinition.schema.json",
+    "view": {
+        "kind": "Form",
+        "properties": {
+            "title": "Skyline Capstone Deployment Template",
+            "steps": [
+                {
+                    "name": "options",
+                    "label": "Required Options",
+                    "elements": [
+                        {
+                            "name": "resourceScope",
+                            "type": "Microsoft.Common.ResourceScope",
+                            "location": {
+                                "resourceTypes": [
+                                    "microsoft.resources/resourcegroups"
+                                ]
+                            }
+                        },
+                        {
+                            "name": "location",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Location",
+                            "subLabel": "",
+                            "defaultValue": "[[resourceGroup().location]",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        
+                        {
+                            "name": "OPNsenseBootstrapURI",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "OPNsense Bootstrap URI",
+                            "subLabel": "",
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "OPNsenseBootstrapScriptName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "OPNsense Bootstrap Script Name",
+                            "subLabel": "",
+                            "defaultValue": "configure-opnsense.sh",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "OPNsenseVersion",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "OPNsense Version",
+                            "subLabel": "",
+                            "defaultValue": "25.1",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "WALinuxVersion",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "WA Linux Version",
+                            "subLabel": "",
+                            "defaultValue": "2.12.0.4",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "AdminPassword",
+                            "type": "Microsoft.Common.PasswordBox",
+                            "label": {
+                                "password": "Admin Password",
+                                "confirmPassword": "Confirm password"
+                            },
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "options": {
+                                "hideConfirmation": true
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "GithubPrivateToken",
+                            "type": "Microsoft.Common.PasswordBox",
+                            "label": {
+                                "password": "Github Repo Key",
+                                "confirmPassword": "Confirm password"
+                            },
+                            "defaultValue": "",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": true,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "options": {
+                                "hideConfirmation": true
+                            },
+                            "visible": true
+                        },
+                        {
+                            "name": "UntrustedNSGName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Untrusted NSG Name",
+                            "subLabel": "",
+                            "defaultValue": "untrusted-nsg",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        }
+                    ]
+                }
+				{
+					"name": "defaults",
+					"label": "Default overrides",
+					"elements": [
+						{
+                            "name": "SkynetVirtualNetworkName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Skynet Virtual Network Name",
+                            "subLabel": "",
+                            "defaultValue": "SKYNET",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {	
+                            "name": "SkynetIPv4AddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Skynet IPv4 Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "10.0.0.0/16",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {	
+                            "name": "SkynetIPv6AddressPrefix",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Skynet IPv6 Address Prefix",
+                            "subLabel": "",
+                            "defaultValue": "fd00:6f08:7be9::/48",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "SkynetAddressSpace",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Skynet Address Space",
+                            "subLabel": "",
+                            "defaultValue": "[[\"[parameters('SkynetIPv4AddressPrefix')]\",\"[parameters('SkynetIPv6AddressPrefix')]\"]",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "TrustedIPv4Subnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Trusted IPv4 Subnet",
+                            "subLabel": "",
+                            "defaultValue": "10.0.0.0/24",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "TrustedIPv6Subnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Trusted IPv6Subnet",
+                            "subLabel": "",
+                            "defaultValue": "fd00:6f08:7be9::/64",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "TrustedSubnetName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Trusted Subnet Name",
+                            "subLabel": "",
+                            "defaultValue": "trusted",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "UntrustedIPv4Subnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Untrusted IPv4 Subnet",
+                            "subLabel": "",
+                            "defaultValue": "10.0.255.224/27",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "UntrustedIPv6Subnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Untrusted IPv6 Subnet",
+                            "subLabel": "",
+                            "defaultValue": "fd00:6f08:7be9:ffff::/64",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "UntrustedSubnetName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Untrusted Subnet Name",
+                            "subLabel": "",
+                            "defaultValue": "untrusted",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "ManagementIPv4Subnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Management IPv4 Subnet",
+                            "subLabel": "",
+                            "defaultValue": "10.0.100.0/27",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "ManagementIPv6Subnet",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Management IPv6 Subnet",
+                            "subLabel": "",
+                            "defaultValue": "fd00:6f08:7be9:ff::/64",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "ManagementSubnetName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Management Subnet Name",
+                            "subLabel": "",
+                            "defaultValue": "management",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "PublicIPDeploymentName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Public IP Deployment Name",
+                            "subLabel": "",
+                            "defaultValue": "SkylinePublicIP",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "PublicIPv4AddressName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Public IPv4 Address Name",
+                            "subLabel": "",
+                            "defaultValue": "skyline-public-ipv4",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "PublicIPv6AddressName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Public IPv6 Address Name",
+                            "subLabel": "",
+                            "defaultValue": "skyline-public-ipv6",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "PublicIPv4DNSLabel",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Public IPv4 DNS Label",
+                            "subLabel": "",
+                            "defaultValue": "skyline",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "PublicIPv6DNSLabel",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "Public IPv6 DNS Label",
+                            "subLabel": "",
+                            "defaultValue": "skyline6",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "OPNsenseVirtualMachineSize",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "OPNsense Virtual Machine Size",
+                            "subLabel": "",
+                            "defaultValue": "Standard_B1s",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+                        {
+                            "name": "OPNsenseVirtualMachineName",
+                            "type": "Microsoft.Common.TextBox",
+                            "label": "OP Nsense Virtual Machine Name",
+                            "subLabel": "",
+                            "defaultValue": "skyline-gateway",
+                            "toolTip": "",
+                            "constraints": {
+                                "required": false,
+                                "regex": "",
+                                "validationMessage": "",
+                                "validations": []
+                            },
+                            "infoMessages": [],
+                            "visible": true
+                        },
+					]
+				}
+            ]
+        },
+        "outputs": {
+            "kind": "ResourceGroup",
+            "location": "[steps('options').resourceScope.location.name]",
+            "resourceGroupId": "[steps('options').resourceScope.resourceGroup.id]",
+            "parameters": {
+                "location": "[steps('options').location]",
+                "SkynetVirtualNetworkName": "[steps('options').SkynetVirtualNetworkName]",
+                "SkynetIPv4AddressPrefix": "[steps('options').SkynetIPv4AddressPrefix]",
+                "SkynetIPv6AddressPrefix": "[steps('options').SkynetIPv6AddressPrefix]",
+                "SkynetAddressSpace": "[steps('options').SkynetAddressSpace]",
+                "TrustedIPv4Subnet": "[steps('options').TrustedIPv4Subnet]",
+                "TrustedIPv6Subnet": "[steps('options').TrustedIPv6Subnet]",
+                "TrustedSubnetName": "[steps('options').TrustedSubnetName]",
+                "UntrustedIPv4Subnet": "[steps('options').UntrustedIPv4Subnet]",
+                "UntrustedIPv6Subnet": "[steps('options').UntrustedIPv6Subnet]",
+                "UntrustedSubnetName": "[steps('options').UntrustedSubnetName]",
+                "ManagementIPv4Subnet": "[steps('options').ManagementIPv4Subnet]",
+                "ManagementIPv6Subnet": "[steps('options').ManagementIPv6Subnet]",
+                "ManagementSubnetName": "[steps('options').ManagementSubnetName]",
+                "PublicIPDeploymentName": "[steps('options').PublicIPDeploymentName]",
+                "PublicIPv4AddressName": "[steps('options').PublicIPv4AddressName]",
+                "PublicIPv6AddressName": "[steps('options').PublicIPv6AddressName]",
+                "PublicIPv4DNSLabel": "[steps('options').PublicIPv4DNSLabel]",
+                "PublicIPv6DNSLabel": "[steps('options').PublicIPv6DNSLabel]",
+                "OPNsenseVirtualMachineSize": "[steps('options').OPNsenseVirtualMachineSize]",
+                "OPNsenseVirtualMachineName": "[steps('options').OPNsenseVirtualMachineName]",
+                "OPNsenseBootstrapURI": "[steps('options').OPNsenseBootstrapURI]",
+                "OPNsenseBootstrapScriptName": "[steps('options').OPNsenseBootstrapScriptName]",
+                "OPNsenseVersion": "[steps('options').OPNsenseVersion]",
+                "WALinuxVersion": "[steps('options').WALinuxVersion]",
+                "AdminPassword": "[steps('options').AdminPassword]",
+                "GithubPrivateToken": "[steps('options').GithubPrivateToken]",
+                "UntrustedNSGName": "[steps('options').UntrustedNSGName]"
+            }
+        }
+    }
+}

@@ -43,13 +43,15 @@ param OPNsenseBootstrapURI string = ''  //TODO make a shell script wrapper & cus
 param OPNsenseBootstrapScriptName string = 'configure-opnsense.sh'
 param OPNsenseVersion string = '25.1'
 param WALinuxVersion string = '2.12.0.4'  //Azure Linux guest agent
+param OPNsenseConfigXMLName string = 'config.xml'
+param PythonGatewayScript string = 'get_nic_gw.py'
 
 //OPNsense Secret Parameters
 param AdminUsername string = 'admin'
 @secure()
 param AdminPassword string
 @secure()
-param GithubRepoKey string
+param GithubPrivateToken string
 
 //Network Security Group parameters
 param UntrustedNSGName string = 'untrusted-nsg'
@@ -102,10 +104,11 @@ resource UntrustedSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' 
 resource TrustedSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
   name: TrustedSubnetName
 }
+/*
 resource ManagementSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
   name: ManagementSubnetName
 }
-
+*/
 // Public IPs
 module PublicIPAddresses 'modules/vnet/publicip.bicep' = {
   name: PublicIPDeploymentName
@@ -147,28 +150,35 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
 module OPNsense 'modules/VM/opnsense.bicep' = {
   name: OPNsenseVirtualMachineName
   params: {
+    //General Parameters
     Location: location
+    AdminUsername: AdminUsername
     AdminPassword: AdminPassword
-    GithubURIAccessKey: GithubRepoKey
+
+    //Shell script Parameters
+    ShellScriptName: OPNsenseBootstrapScriptName
     /*
      Script Params
-     $1 = OPNScriptURI
-     $2 = OpnVersion
-     $3 = WALinuxVersion
+     $1 = OPNScriptURI - URI to the private github repo that contains config files and scripts, must end in '/'
+     $2 = OpnVersion - The version of OPNsense to install to this system
+     $3 = WALinuxVersion - The version of the Azure Linux Agent to install to this system
      $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
      $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
-     $6 = the secret value to access the private github repo URI
+     $6 = github token to download files from the private repo
+     $7 = file name of the OPNsense config file, default config.xml
+     $8 = file name of the python script to find gateway, default get_nic_gw.py
     */
-    ShellScriptParameters: {
-      OpnScriptURI: OPNsenseBootstrapURI
-      OpnVersion: OPNsenseVersion
-      WALinuxVersion: WALinuxVersion
-      TrustedSubnetName: TrustedSubnetName
-      ManagementSubnetName: ManagementSubnetName
-    }
     OPNScriptURI: OPNsenseBootstrapURI
-    ShellScriptName: OPNsenseBootstrapScriptName
-    multiNicSupport: true
+    OPNVersion: OPNsenseVersion
+    WALinuxVersion: WALinuxVersion
+    TrustedSubnetName: TrustedSubnetName
+    ManagementSubnetName: ManagementSubnetName
+    GithubPrivateToken: GithubPrivateToken 
+    OPNsenseConfigXML: OPNsenseConfigXMLName
+    PythonGatewayScript: PythonGatewayScript
+
+    //Networking parameters
+    //multiNicSupport: true
     trustedSubnetId: TrustedSubnet.id
     untrustedSubnetId: UntrustedSubnet.id
     virtualMachineName: OPNsenseVirtualMachineName

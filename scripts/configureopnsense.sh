@@ -1,19 +1,36 @@
 #!/bin/sh
 
 # Script Params
-# $1 = OPNScriptURI - needs to end with '/'
+# $1 = OPNScriptURI - path to the github repo which contains the config files and scripts - needs to end with '/'
 # $2 = OpnVersion
 # $3 = WALinuxVersion
 # $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
 # $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
+# $6 = github token to download files from the private repo
+# $7 = file name of the OPNsense config file, default config.xml
+# $8 = file name of the python script to find gateway, default get_nic_gw.py
+
+# install curl to download files from github easier
+pkg install -y curl
+# install python3
+pkg install -y python3
+
+# download the OPNsense config.xml 
+curl -H "Authorization: Bearer $6" \
+    -H 'Accept: application/vnd.github.v3.raw' \
+    -O \
+    -L "$1$7"
+# download the python gateway detector script
+curl -H "Authorization: Bearer $6" \
+    -H 'Accept: application/vnd.github.v3.raw' \
+    -O \
+    -L "$1$8"
 
 # Set OPNsense config.xml values
-fetch $1config.xml
-fetch $1get_nic_gw.py
-gatewayIp=$(python get_nic_gw.py $4)
-sed -i "" "s/yyy.yyy.yyy.yyy/$gwip/" config.xml
-sed -i "" "s_zzz.zzz.zzz.zzz_$6_" config.xml
-cp config.xml /usr/local/etc/config.xml
+gatewayIp=$(python3 get_nic_gw.py $4)
+sed -i "" "s/yyy.yyy.yyy.yyy/$gatewayIp/" $7 
+sed -i "" "s_zzz.zzz.zzz.zzz_$5_" $7
+cp $7 /usr/local/etc/config.xml
 
 #Download OPNSense Bootstrap and Permit Root Remote Login
 # fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in
