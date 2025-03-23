@@ -14,10 +14,10 @@ param trustedNsgId string = ''
 //General parameters
 param virtualMachineName string
 param virtualMachineSize string
-//param multiNicSupport bool
 param Location string = resourceGroup().location
 
 //Bootstrap shell script parameters
+
 param ShellScriptName string
 
     /*
@@ -32,30 +32,32 @@ param ShellScriptName string
      $8 = file name of the python script to find gateway, default get_nic_gw.py
      $9 = file name of the waagent actions configuration file, default waagent_actions.conf
     */
-param OPNVersion string
+
 param OPNScriptURI string
+param OPNVersion string
 param WALinuxVersion string
-param TrustedSubnetName string
-param ManagementSubnetName string
+param TrustedSubnetIPv4Prefix string
+param ManagementSubnetIPv4Prefix string
 @secure()
 param GithubPrivateToken string
 param OPNsenseConfigXML string
 param PythonGatewayScript string
 param WAAgentActionsConfig string
 
+
 var scriptParams = [ 
-  OPNVersion
   OPNScriptURI
+  OPNVersion
   WALinuxVersion
-  TrustedSubnetName
-  ManagementSubnetName
+  TrustedSubnetIPv4Prefix //TODO needs to be TrustedSubnetPrefix for the get_nic_gw.py script to work correctly
+  ManagementSubnetIPv4Prefix //TODO needs to be ManagementSubnetPrefix for the management VM to recv proper routing/nat
   GithubPrivateToken
   OPNsenseConfigXML
   PythonGatewayScript
   WAAgentActionsConfig
 ]
-
-var runShellScriptCommand = 'sh ${ShellScriptName} ${join(scriptParams, ' ')}'
+// Installs curl package, uses curl to securely download the bootstrap script, runs the bootstrap script with the required params
+var runShellScriptCommand = '/bin/sh -c "pkg update && pkg install -y curl && curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${OPNScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
 
 //Secrets
 //TODO Azure Key Vault for secure storage and retrieval of secrets
@@ -71,6 +73,7 @@ var trustedNicName = '${virtualMachineName}-Trusted-NIC'
 ////Begin Resources
 
 //Network Interfaces
+
 module untrustedNic '../vnet/nic.bicep' = {
   name: untrustedNicName
   params:{
@@ -143,9 +146,12 @@ resource OPNsense 'Microsoft.Compute/virtualMachines@2023-07-01' = {
     publisher: 'thefreebsdfoundation'
     product: 'freebsd-14_2'
   }
+  
 }
 
 //Run custom shell script with image deployment
+
+
 resource vmext 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = {
   parent: OPNsense
   name: 'CustomScript'
@@ -156,13 +162,12 @@ resource vmext 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = {
     typeHandlerVersion: '1.5'
     autoUpgradeMinorVersion: false
     settings:{
-      fileUris: [
-        '${OPNScriptURI}${ShellScriptName}'
-      ]
-    commandToExecute: runShellScriptCommand
+      //fileUris: ['${OPNScriptURI}${ShellScriptName}']
+      commandToExecute: runShellScriptCommand
     }
   }
 }
+
 output untrustedNicIP string = untrustedNic.outputs.nicIP
 output trustedNicIP string = trustedNic.outputs.nicIP
 output untrustedNicIPv4ProfileId string = untrustedNic.outputs.nicIPv4ConfigId

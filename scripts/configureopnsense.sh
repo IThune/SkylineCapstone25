@@ -11,8 +11,6 @@
 # $8 = file name of the python script to find gateway, default get_nic_gw.py
 # $9 = file name of the waagent actions configuration file, default waagent_actions.conf
 
-# install curl to download files from github easier
-pkg install -y curl
 # install python3
 pkg install -y python3
 

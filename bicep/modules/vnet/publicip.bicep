@@ -20,6 +20,7 @@ resource publicIPv4Address 'Microsoft.Network/publicIPAddresses@2023-05-01' = {
     }
   }
 }
+
 resource publicIPv6Address 'Microsoft.Network/publicIPAddresses@2023-05-01' = {
   name: publicIPv6Name
   location: location
@@ -32,6 +33,7 @@ resource publicIPv6Address 'Microsoft.Network/publicIPAddresses@2023-05-01' = {
     }
   }
 }
+
 output publicIPv4Id string = publicIPv4Address.id
 output publicIPv4Address string = publicIPv4Address.properties.ipAddress
 output publicIPv6Id string = publicIPv6Address.id

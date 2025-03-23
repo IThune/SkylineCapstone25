@@ -28,20 +28,24 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-05-01' = {
           subnet: {id: SubnetId}
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: first(publicIPv4Id) == '/' ? {id: publicIPv4Id}:null
-          /*
-          loadBalancerBackendAddressPools: first(loadBalancerBackendAddressPoolId) == '/' ? [{id: loadBalancerBackendAddressPoolId}]:null
-          loadBalancerInboundNatRules: first(loadBalancerInboundNatRules) == '/' ? [{id: loadBalancerInboundNatRules}]:null
-          */
+          primary: true
+          
+          //loadBalancerBackendAddressPools: first(loadBalancerBackendAddressPoolId) == '/' ? [{id: loadBalancerBackendAddressPoolId}]:null
+          //loadBalancerInboundNatRules: first(loadBalancerInboundNatRules) == '/' ? [{id: loadBalancerInboundNatRules}]:null
+          
         }
       }
+      
       {
         name: 'IPv6Config'
         properties: {
+          privateIPAddressVersion: 'IPv6'
           subnet: {id: SubnetId}
           privateIPAllocationMethod: 'Dynamic'
           publicIPAddress: first(publicIPv6Id) == '/' ? {id: publicIPv6Id}:null
         }
       }
+      
     ]
   }
 }

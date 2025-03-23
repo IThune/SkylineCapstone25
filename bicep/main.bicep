@@ -39,8 +39,9 @@ param OPNsenseVirtualMachineSize string = 'Standard_B1s'  //Smallest size VM, fr
 param OPNsenseVirtualMachineName string = 'skyline-gateway'
 
 //OPNsense Bootstrap parameters
+
 param OPNsenseBootstrapURI string = 'https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/'
-param OPNsenseBootstrapScriptName string = 'configure-opnsense.sh'
+param OPNsenseBootstrapScriptName string = 'configureopnsense.sh'
 param OPNsenseVersion string = '25.1'
 param WALinuxVersion string = '2.12.0.4'  //Azure Linux guest agent
 param OPNsenseConfigXMLName string = 'config.xml'
@@ -48,7 +49,7 @@ param PythonGatewayScript string = 'get_nic_gw.py'
 param AzureAgentActionsConfig string = 'actions_waagent.conf'
 
 //OPNsense Secret Parameters
-param AdminUsername string = 'admin'
+param AdminUsername string = 'ian-administrator'
 @secure()
 param AdminPassword string
 @secure()
@@ -75,7 +76,7 @@ module SkyVnet 'modules/vnet/vnet.bicep' = {
             TrustedIPv6Subnet
           ]
         }
-      }
+      }     
       {
         name: UntrustedSubnetName
         properties: {
@@ -99,11 +100,13 @@ module SkyVnet 'modules/vnet/vnet.bicep' = {
 }
 
 // register existing subnets for use in this file
+
 resource UntrustedSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
-  name: UntrustedSubnetName
+  name: '${SkynetVirtualNetworkName}/${UntrustedSubnetName}'
 }
+
 resource TrustedSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
-  name: TrustedSubnetName
+  name: '${SkynetVirtualNetworkName}/${TrustedSubnetName}'
 }
 /*
 resource ManagementSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
@@ -122,6 +125,7 @@ module PublicIPAddresses 'modules/vnet/publicip.bicep' = {
 }
 
 // untrusted NSG
+// TODO tighten up these rules, these are test only!
 module UntrustedNSG 'modules/vnet/nsg.bicep' = {
   name: UntrustedNSGName
   params: {
@@ -129,17 +133,29 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
     Location: location
     securityRules: [
       {
-        name: 'InboundSSH'
+        name: 'In-Any'
         properties: {
-          description: 'Locks down inbound SSH access to the firewall from the Internet. SSH is configured to listen on a non-default port number.'
-          protocol: 'Tcp'
-          sourcePortRange: '*'
-          destinationPortRange: '58585'
-          sourceAddressPrefix: '*' //TODO lock down allowed IP addresses
-          destinationAddressPrefix: '*'
+          priority: 4096
+          sourceAddressPrefix: '*'
+          protocol: '*'
+          destinationPortRange: '*'
           access: 'Allow'
-          priority: 100
           direction: 'Inbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
+        }
+      }
+      {
+        name: 'Out-Any'
+        properties: {
+          priority: 4096
+          sourceAddressPrefix: '*'
+          protocol: '*'
+          destinationPortRange: '*'
+          access: 'Allow'
+          direction: 'Outbound'
+          sourcePortRange: '*'
+          destinationAddressPrefix: '*'
         }
       }
     ]
@@ -170,18 +186,18 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
      $8 = file name of the python script to find gateway, default get_nic_gw.py
      $9 = waagent actions config file
     */
+    
     OPNScriptURI: OPNsenseBootstrapURI
     OPNVersion: OPNsenseVersion
     WALinuxVersion: WALinuxVersion
-    TrustedSubnetName: TrustedSubnetName
-    ManagementSubnetName: ManagementSubnetName
+    TrustedSubnetIPv4Prefix: TrustedIPv4Subnet
+    ManagementSubnetIPv4Prefix: ManagementIPv4Subnet
     GithubPrivateToken: GithubPrivateToken 
     OPNsenseConfigXML: OPNsenseConfigXMLName
     PythonGatewayScript: PythonGatewayScript
     WAAgentActionsConfig: AzureAgentActionsConfig
-
+    
     //Networking parameters
-    //multiNicSupport: true
     trustedSubnetId: TrustedSubnet.id
     untrustedSubnetId: UntrustedSubnet.id
     virtualMachineName: OPNsenseVirtualMachineName
@@ -189,12 +205,8 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
     publicIPv4Id: PublicIPAddresses.outputs.publicIPv4Id
     publicIPv6Id: PublicIPAddresses.outputs.publicIPv6Id
     untrustedNsgId: UntrustedNSG.outputs.nsgID
+    trustedNsgId: UntrustedNSG.outputs.nsgID  // TODO make a trusted NSG, management NSG
   }
-  dependsOn: [
-    SkyVnet
-    TrustedSubnet
-    UntrustedSubnet
-  ]
 }
 
 //TODO add the management VM
