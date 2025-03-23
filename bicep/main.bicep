@@ -138,7 +138,7 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
           sourceAddressPrefix: '*' //TODO lock down allowed IP addresses
           destinationAddressPrefix: '*'
           access: 'Allow'
-          priority: 10
+          priority: 100
           direction: 'Inbound'
         }
       }
