@@ -33,16 +33,6 @@ Traffic is evaluated against each rule in the NSG starting from the lowest prior
 There are 3 default rules in Azure NSGs with priority numbers of 65000, 65001, and 65500. We should leave them as is.
 For example, an insecure NSG that allows all traffic to and from this subnet would look like this:
 
-| Priority | Name | Port | Protocol | Source |  Destination | Action | Description |
-| --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- | --------------- |
-| Inbound Security Rules ||||||||
-| 4096 | In-Any | Any | Any | Any | Any | ✔️ Allow | Allows all inbound traffic |
-| 65000 | AllowVnetInBound | Any | Any | VirtualNetwork | VirtualNetwork | ✔️ Allow | Default allow traffic from another vnet |
-| 65001 | AllowAzureLoadBalancerInBound | Any | Any | AzureLoadBalancer | Any | ✔️ Allow | Default allow traffic from AzureLoadBalancer |
-| 65500 | DenyAllInBound | Any | Any  Any | Any | ❌ Deny | Default deny NSG rule |
-
-We add in our rules above the 4096 entry to create our NSGs.
-
 <table>
     <thead>
         <tr>
@@ -145,3 +135,6 @@ We add in our rules above the 4096 entry to create our NSGs.
         </tr>
     </tbody>
 </table>
+
+We add our rules 
+
