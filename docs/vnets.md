@@ -1,7 +1,6 @@
-Azure VNETs Overview
-====================
+# Skyline VNETs Overview #
 
-Networking in Azure is accomplished with vnets, or virtual networks. Vnets do a few things:
+Networking in the Skyline cloud environment is accomplished with Azure vnets, or virtual networks. Vnets do a few things:
 
 - Allows resources to communicate with each other and with other devices over the Internet
 - Define the private RFC 1918 IP spaces and subnets available to resources
@@ -10,7 +9,7 @@ Networking in Azure is accomplished with vnets, or virtual networks. Vnets do a 
 
 We can begin by defining an IP space (or multiple) for our vnet. Within those address spaces, we define different subnets to segment our network and apply different security policies to each one. 
 
-##Skyline Address Spaces & subnets
+## Skyline Address Spaces & subnets ##
 
 Skyline provides a dual-stack IP space for its resources. That is, subnets contain both IPv4 and IPv6 addresses.
 
@@ -27,12 +26,20 @@ We have 3 different subnets available to Skyline NICs:
 | trusted | 10.0.0.0/24 | fd00:6f08:7be9::/64 | For network interfaces that are located behind the Skyline gateway (OPNsense). Resources located here are allowed to communicate freely with other trusted resources. |
 | management | 10.0.100.0/27 | fd00:6f08:7be9:ff::/64 | Separate management subnet used by IT admins. Has its own public IP. Traffic from this subnet is granted increased access to trusted subnet resources for management purposes, so must be subject to increased monitoring and access control. |
 
-##Skyline Network Security Groups
+## Skyline Network Security Groups ##
 
-In Azure, NSGs are access control lists containing security rules that allow or deny inbound traffic to, or outbound traffic from, different resources. We can filter based on source & destination IP, CIDR block, and network protocol.
+In Azure, NSGs are access control lists containing security rules that allow or deny inbound traffic to, or outbound traffic from, different resources. We can filter based on source & destination IP, CIDR block, network port numbers and protocols, and so called Service Tags which allow us to use keywords like "Internet" with which we can apply filtering rules.
+
 Traffic is evaluated against each rule in the NSG starting from the lowest priority number. Priorities are numbered between 100 and 4096.
-There are 3 default rules in Azure NSGs with priority numbers of 65000, 65001, and 65500. We should leave them as is.
-For example, an insecure NSG that allows all traffic to and from this subnet would look like this:
+There are 3 default rules in Azure NSGs with priority numbers of 65000, 65001, and 65500.
+
+Azure NSGs are applied to subnets. Alternatively, they can be assigned to a network interface for granular control, however both the parent subnet's nsg and the interface's assigned nsg will both be processed, with the parent subnet's nsg being processed first. Important to note as this behavior can result in conflicting rules. So with 2 subnets we thus have 2 NSGs:
+
+### Untrusted Subnet NSG ###
+
+In the Skyline network, the Untrusted subnet talks to security cameras and NVR users over the Internet. To do this in a secure way, we tunnel the traffic through the company's VPN, which is a Wireguard interface on the OPNsense gateway. So we are only going to allow Wireguard traffic to and from this subnet as a security measure, and nothing else. You'll notice Azure creates a default AllowInternetOutbound rule that allows any traffic to talk to the Internet. Leaving this rule wide open would be a security risk. We are not able to delete this rule, but we can override it with a deny-all rule with a higher priority number, so we will make that rule in our outbound list.
+
+Also important to note is that NSGs in Azure are stateful, so it will not be necessary to duplicate the Wireguard rules in the Inbound list to the Outbound list.
 
 <table>
     <thead>
@@ -51,12 +58,21 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td colspan=8>Inbound Rule List</td>
         </tr>
         <tr>
-            <td>4096</td> <!-- Priority -->
-            <td>In-Any</td> <!-- Name -->
-            <td>Any</td> <!-- Port -->
-            <td>Any</td> <!-- Protocol -->
+            <td>4095</td> <!-- Priority -->
+            <td>Allow-WG-In-IPv4</td> <!-- Name -->
+            <td>51820</td> <!-- Port -->
+            <td>UDP</td> <!-- Protocol -->
             <td>Any</td> <!-- Source -->
-            <td>Any</td> <!-- Destination -->
+            <td>10.0.255.224/27</td> <!-- Destination -->
+            <td>✔️ Allow</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td>4096</td> <!-- Priority -->
+            <td>Allow-WG-In-IPv6</td> <!-- Name -->
+            <td>51820</td> <!-- Port -->
+            <td>UDP</td> <!-- Protocol -->
+            <td>Any</td> <!-- Source -->
+            <td>fd00:6f08:7be9:ffff::/64</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
         </tr>
         <tr>
@@ -88,15 +104,15 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
         </tr>
         <tr>
             <td colspan=8>Outbound Rule List</td>
-        </tr>
+        </tr>     
         <tr>
             <td>4096</td> <!-- Priority -->
-            <td>Out-Any</td> <!-- Name -->
+            <td>Deny-InternetOut-Any</td> <!-- Name -->
             <td>Any</td> <!-- Port -->
             <td>Any</td> <!-- Protocol -->
             <td>Any</td> <!-- Source -->
-            <td>Any</td> <!-- Destination -->
-            <td>✔️ Allow</td> <!-- Action -->
+            <td>Internet</td> <!-- Destination -->
+            <td>❌ Deny</td> <!-- Action -->
         </tr>
         <tr>
             <td>65000</td> <!-- Priority -->
@@ -128,11 +144,106 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
     </tbody>
 </table>
 
-We add our filter rules above the 4096 rules to create our NSG.
+### Trusted Subnet NSG ###
 
+The Trusted Subnet only needs to communicate with the Skyline gateway to talk to clients over the Wireguard network. For this reason, the default "AllowVnet" rules will suffice, and we'll block outbound traffic directly to the Internet for good measure.
 
+<table>
+    <thead>
+        <tr>
+            <th>Priority</th>
+            <th>Name</th>
+            <th>Port</th>
+            <th>Protocol</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan=8>Inbound Rule List</td>
+        </tr>
+        <tr>
+            <td>65000</td> <!-- Priority -->
+            <td>AllowVnetInBound</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>VirtualNetwork</td> <!-- Source -->
+            <td>VirtualNetwork</td> <!-- Destination -->
+            <td>✔️ Allow</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td>65001</td> <!-- Priority -->
+            <td>AllowAzureLoadBalancerInBound</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>AzureLoadBalancer</td> <!-- Source -->
+            <td>Any</td> <!-- Destination -->
+            <td>✔️ Allow</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td>65500</td> <!-- Priority -->
+            <td>DenyAllInBound</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>Any</td> <!-- Source -->
+            <td>Any</td> <!-- Destination -->
+            <td>❌ Deny</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td colspan=8>Outbound Rule List</td>
+        </tr>     
+        <tr>
+            <td>4096</td> <!-- Priority -->
+            <td>Deny-InternetOut-Any</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>Any</td> <!-- Source -->
+            <td>Internet</td> <!-- Destination -->
+            <td>❌ Deny</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td>65000</td> <!-- Priority -->
+            <td>AllowVnetOutBound</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>VirtualNetwork</td> <!-- Source -->
+            <td>VirtualNetwork</td> <!-- Destination -->
+            <td>✔️ Allow</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td>65001</td> <!-- Priority -->
+            <td>AllowInternetOutBound</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>Any</td> <!-- Source -->
+            <td>Internet</td> <!-- Destination -->
+            <td>✔️ Allow</td> <!-- Action -->
+        </tr>
+        <tr>
+            <td>65500</td> <!-- Priority -->
+            <td>DenyAllOutBound</td> <!-- Name -->
+            <td>Any</td> <!-- Port -->
+            <td>Any</td> <!-- Protocol -->
+            <td>Any</td> <!-- Source -->
+            <td>Any</td> <!-- Destination -->
+            <td>❌ Deny</td> <!-- Action -->
+        </tr>
+    </tbody>
+</table
 
+## Custom Routing Tables ##
 
+In order for hosts on our Trusted subnet to communicate with the Internet via the Skyline gateway, we will need to install custom route tables on those hosts. These can be used to change Azure's default routing. The reason for this is because Azure wants to be able to handle DHCP within subnets. We are not allowed to use a DHCP server to point to our own gateway.
+
+So the way around this is to create a Route Table resource and associate it with the Trusted subnet. The route table contains this entry:
+
+| Route Name | Address Prefix | Next hop type | Next hop IP address |
+| ------------- | -------------- | -------------- | -------------- |
+| default-route | 0.0.0.0/0 | Virtual appliance | 10.0.0.4 |
+
+In this configuration, we are setting the next-hop address to the "LAN" interface on OPNsense. This way traffic is properly routed through our virtual appliance.
 
 
 
