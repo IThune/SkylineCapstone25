@@ -72,7 +72,7 @@ Now that peers have been assigned to a group in OPNsense, we just need to make s
 | NVR user 1 | NVR Users | 10.10.0.1 | 10.0.0.5/32 http/https |
 | NVR user 2 | NVR Users | 10.10.0.1 | 10.0.0.5/32 http/https |
 | NVR user x | NVR Users | 10.10.0.x | 10.0.0.5/32 http/https |
-| IT admin 1 | IT Admins | 10.10.100.1 | 0.0.0.0/0 any |
+| IT admin 1 | IT Admins | 10.10.100.1 | 10.0.0.0/24 10.10.0.0/16 any |
 | IT admin 2 | IT Admins | 10.10.100.2 | 10.0.0.0/24 10.10.0.0/16 any |
 
 
