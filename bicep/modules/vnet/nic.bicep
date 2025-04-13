@@ -10,6 +10,8 @@ param enableIPForwarding bool = false
 param SubnetId string
 param publicIPv4Id string = ''
 param publicIPv6Id string = ''
+param privateIPAllocMethod string
+param privateStaticIPv4 string = ''
 
 //TODO Load Balancer stuff?
 //param loadBalancerBackendAddressPoolId string = ''
@@ -26,7 +28,9 @@ resource nic 'Microsoft.Network/networkInterfaces@2023-05-01' = {
         name: 'IPv4Config'
         properties: {
           subnet: {id: SubnetId}
-          privateIPAllocationMethod: 'Dynamic'
+          privateIPAllocationMethod: privateIPAllocMethod
+          // if static ip, set the static ip. otherwise don't set
+          privateIPAddress: privateIPAllocMethod == 'Static' ? privateStaticIPv4:null
           publicIPAddress: first(publicIPv4Id) == '/' ? {id: publicIPv4Id}:null
           primary: true
           

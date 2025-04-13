@@ -66,8 +66,10 @@ param AdminUsername string
 param AdminPassword string
 
 //Network Interfaces
+param trustedNicStaticIPv4 string
 var untrustedNicName = '${virtualMachineName}-Untrusted-NIC'
 var trustedNicName = '${virtualMachineName}-Trusted-NIC'
+
 
 ////End Parameters
 ////Begin Resources
@@ -82,8 +84,9 @@ module untrustedNic '../vnet/nic.bicep' = {
     SubnetId: untrustedSubnetId
     publicIPv4Id: publicIPv4Id
     publicIPv6Id: publicIPv6Id
-    enableIPForwarding: true
+    enableIPForwarding: false
     nsgId: untrustedNsgId
+    privateIPAllocMethod: 'Dynamic'
   }
 }
 
@@ -95,6 +98,8 @@ module trustedNic '../vnet/nic.bicep' = {
     SubnetId: trustedSubnetId
     enableIPForwarding: true
     nsgId: trustedNsgId
+    privateIPAllocMethod: 'Static'
+    privateStaticIPv4: trustedNicStaticIPv4
   }
 }
 

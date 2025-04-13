@@ -38,8 +38,10 @@ param PublicIPv6DNSLabel string = 'skyline6'  //skyline6.eastus.cloudapp.azure.c
 param OPNsenseVirtualMachineSize string = 'Standard_B1s'  //Smallest size VM, free for student subscription
 param OPNsenseVirtualMachineName string = 'skyline-gateway'
 
-//OPNsense Bootstrap parameters
+//OPNsense Networking parameters
+param OPNsenseTrustedNicPrivateIPv4Address string = '10.0.0.4'
 
+//OPNsense Bootstrap parameters
 param OPNsenseBootstrapURI string = 'https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/'
 param OPNsenseBootstrapScriptName string = 'configureopnsense.sh'
 param OPNsenseVersion string = '25.1'
@@ -58,9 +60,34 @@ param GithubPrivateToken string
 //Network Security Group parameters
 param UntrustedNSGName string = 'untrusted-nsg'
 
+//Route table parameters - allows traffic behind opnsense gateway to reach the internet
+param rtName string = 'skyline-default-route'
+param rtEntryName string = 'default-route'
+param rtDestinationAddressPrefix string = '0.0.0.0/0'
+// next hop ip address is the trusted NIC ip for opnsense (OPNsenseTrustedNicPrivateIPv4Address)
+param nextHopType string = 'Virtual Appliance'
+
+var rtEntries = [
+  {
+    name: rtEntryName
+    properties: {
+      addressPrefix: rtDestinationAddressPrefix
+      nextHopType: nextHopType
+      nextHopIpAddress: OPNsenseTrustedNicPrivateIPv4Address
+    }
+  }
+]
 ////End Parameters
 ////Begin Resources
 
+// Custom routing table
+module SkylineRoutingTable 'modules/vnet/route-table.bicep' = {
+  name: rtName
+  params: {
+    rtName: rtName
+    routes: rtEntries
+  }
+}
 // main vnet
 module SkyVnet 'modules/vnet/vnet.bicep' = {
   name: SkynetVirtualNetworkName
@@ -75,6 +102,7 @@ module SkyVnet 'modules/vnet/vnet.bicep' = {
             TrustedIPv4Subnet
             TrustedIPv6Subnet
           ]
+          routeTable: { id: SkylineRoutingTable.outputs.rtID }
         }
       }     
       {
@@ -206,6 +234,7 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
     publicIPv6Id: PublicIPAddresses.outputs.publicIPv6Id
     untrustedNsgId: UntrustedNSG.outputs.nsgID
     trustedNsgId: UntrustedNSG.outputs.nsgID  // TODO make a trusted NSG, management NSG
+    trustedNicStaticIPv4: OPNsenseTrustedNicPrivateIPv4Address
   }
 }
 
