@@ -32,9 +32,7 @@ To securely connect cameras to the NVR system, allow users to access the NVR web
 3.  Secure
 
     The Wireguard protocol has been peer-reviewed to be as cryptographically secure as possible. It uses the latest in encryption
-    technology. It also has some access control built in, with the ability to control which IP addresses and/or networks each client
-    is allowed to talk to. Combine that with OPNsense's robust firewall capabilities means we can create a comprehensive security policy
-    for each client on the network.
+    technology.
 
 ## Access Control with Wireguard and OPNsense Firewall ##
 
