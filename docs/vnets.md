@@ -18,13 +18,12 @@ Skyline provides a dual-stack IP space for its resources. That is, subnets conta
 | SKYNET | 10.0.0.0/16 | fd00:6f08:7be9::/48 |
 
 In Azure, network interfaces on virtual machines are associated with a subnet. Its subnet defines which networks it is allowed to talk to.
-We have 3 different subnets available to Skyline NICs:
+We have 2 different subnets available to Skyline NICs:
 
 | Subnet Name | IPv4 | IPv6 | Description |
 | ------------- | -------------- | -------------- | -------------- |
 | untrusted | 10.0.255.224/27 | fd00:6f08:7be9:ffff::/64 | External network interfaces that must communicate to the Internet. Traffic from this subnet to the trusted is subject to network security policies. |
 | trusted | 10.0.0.0/24 | fd00:6f08:7be9::/64 | For network interfaces that are located behind the Skyline gateway (OPNsense). Resources located here are allowed to communicate freely with other trusted resources. |
-| management | 10.0.100.0/27 | fd00:6f08:7be9:ff::/64 | Separate management subnet used by IT admins. Has its own public IP. Traffic from this subnet is granted increased access to trusted subnet resources for management purposes, so must be subject to increased monitoring and access control. |
 
 ## Skyline Network Security Groups ##
 
@@ -139,7 +138,7 @@ Azure NSGs are applied to subnets. Alternatively, they can be assigned to a netw
     </tbody>
 </table>
 
-In the Skyline network, the Untrusted subnet talks to security cameras and NVR users over the Internet. To do this in a secure way, we tunnel the traffic through the company's VPN, which is a Wireguard interface on the OPNsense gateway. So we are only going to allow Wireguard traffic to and from this subnet as a security measure, and nothing else. You'll notice Azure creates a default AllowInternetOutbound rule that allows any traffic to talk to the Internet. Leaving this rule wide open would be a security risk. We are not able to delete this rule, but we can override it with a deny-all rule with a higher priority number, so we will make that rule in our outbound list.
+In the Skyline network, the Untrusted subnet talks to security cameras and NVR users over the Internet. To do this in a secure way, we tunnel the traffic through the company's VPN, which is a Wireguard interface on the OPNsense gateway. So we are only going to allow Wireguard traffic to and from this subnet as a security measure, and nothing else. You'll notice Azure creates a default AllowInternetOutbound rule that allows any traffic to talk to the Internet. Leaving this rule wide open would be a security risk. We are not able to delete this rule, but we can override it with a deny-all rule with a lower priority number, so we will make that rule in our outbound list.
 
 Also important to note is that NSGs in Azure are stateful, so it will not be necessary to duplicate the Wireguard rules in the Inbound list to the Outbound list.
 
