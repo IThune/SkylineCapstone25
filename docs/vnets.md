@@ -36,11 +36,6 @@ There are 3 default rules in Azure NSGs with priority numbers of 65000, 65001, a
 Azure NSGs are applied to subnets. Alternatively, they can be assigned to a network interface for granular control, however both the parent subnet's nsg and the interface's assigned nsg will both be processed, with the parent subnet's nsg being processed first. Important to note as this behavior can result in conflicting rules. So with 2 subnets we thus have 2 NSGs:
 
 ### Untrusted Subnet NSG ###
-
-In the Skyline network, the Untrusted subnet talks to security cameras and NVR users over the Internet. To do this in a secure way, we tunnel the traffic through the company's VPN, which is a Wireguard interface on the OPNsense gateway. So we are only going to allow Wireguard traffic to and from this subnet as a security measure, and nothing else. You'll notice Azure creates a default AllowInternetOutbound rule that allows any traffic to talk to the Internet. Leaving this rule wide open would be a security risk. We are not able to delete this rule, but we can override it with a deny-all rule with a higher priority number, so we will make that rule in our outbound list.
-
-Also important to note is that NSGs in Azure are stateful, so it will not be necessary to duplicate the Wireguard rules in the Inbound list to the Outbound list.
-
 <table>
     <thead>
         <tr>
@@ -144,10 +139,13 @@ Also important to note is that NSGs in Azure are stateful, so it will not be nec
     </tbody>
 </table>
 
+In the Skyline network, the Untrusted subnet talks to security cameras and NVR users over the Internet. To do this in a secure way, we tunnel the traffic through the company's VPN, which is a Wireguard interface on the OPNsense gateway. So we are only going to allow Wireguard traffic to and from this subnet as a security measure, and nothing else. You'll notice Azure creates a default AllowInternetOutbound rule that allows any traffic to talk to the Internet. Leaving this rule wide open would be a security risk. We are not able to delete this rule, but we can override it with a deny-all rule with a higher priority number, so we will make that rule in our outbound list.
+
+Also important to note is that NSGs in Azure are stateful, so it will not be necessary to duplicate the Wireguard rules in the Inbound list to the Outbound list.
+
+
+
 ### Trusted Subnet NSG ###
-
-The Trusted Subnet only needs to communicate with the Skyline gateway to talk to clients over the Wireguard network. For this reason, the default "AllowVnet" rules will suffice, and we'll block outbound traffic directly to the Internet for good measure.
-
 <table>
     <thead>
         <tr>
@@ -233,8 +231,10 @@ The Trusted Subnet only needs to communicate with the Skyline gateway to talk to
     </tbody>
 </table
 
-## Custom Routing Tables ##
+The Trusted Subnet only needs to communicate with the Skyline gateway to talk to clients over the Wireguard network. For this reason, the default "AllowVnet" rules will suffice, and we'll block outbound traffic directly to the Internet for good measure.
 
+
+## Custom Routing Tables ##
 In order for hosts on our Trusted subnet to communicate with the Internet via the Skyline gateway, we will need to install custom route tables on those hosts. These can be used to change Azure's default routing. The reason for this is because Azure wants to be able to handle DHCP within subnets. We are not allowed to use a DHCP server to point to our own gateway.
 
 So the way around this is to create a Route Table resource and associate it with the Trusted subnet. The route table contains this entry:
