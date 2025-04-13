@@ -1,4 +1,5 @@
-#Azure VNETs Overview
+Azure VNETs Overview
+====================
 
 Networking in Azure is accomplished with vnets, or virtual networks. Vnets do a few things:
 
@@ -43,7 +44,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <th>Source</th>
             <th>Destination</th>
             <th>Action</th>
-            <th>Description</th>
         </tr>
     </thead>
     <tbody>
@@ -58,7 +58,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>Any</td> <!-- Source -->
             <td>Any</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
-            <td>Allows any inbound traffic from this subnet</td> <!-- Description -->
         </tr>
         <tr>
             <td>65000</td> <!-- Priority -->
@@ -68,7 +67,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>VirtualNetwork</td> <!-- Source -->
             <td>VirtualNetwork</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
-            <td>Default Allow traffic from another vnet</td> <!-- Description -->
         </tr>
         <tr>
             <td>65001</td> <!-- Priority -->
@@ -78,7 +76,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>AzureLoadBalancer</td> <!-- Source -->
             <td>Any</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
-            <td>Default allow traffic from AzureLoadBalancer</td> <!-- Description -->
         </tr>
         <tr>
             <td>65500</td> <!-- Priority -->
@@ -88,7 +85,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>Any</td> <!-- Source -->
             <td>Any</td> <!-- Destination -->
             <td>❌ Deny</td> <!-- Action -->
-            <td>Default Deny inbound traffic</td> <!-- Description -->
         </tr>
         <tr>
             <td colspan=8>Outbound Rule List</td>
@@ -101,7 +97,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>Any</td> <!-- Source -->
             <td>Any</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
-            <td>Allows any outbound traffic from this subnet</td> <!-- Description -->
         </tr>
         <tr>
             <td>65000</td> <!-- Priority -->
@@ -111,7 +106,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>VirtualNetwork</td> <!-- Source -->
             <td>VirtualNetwork</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
-            <td>Default Allow traffic to another vnet</td> <!-- Description -->
         </tr>
         <tr>
             <td>65001</td> <!-- Priority -->
@@ -121,7 +115,6 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>Any</td> <!-- Source -->
             <td>Internet</td> <!-- Destination -->
             <td>✔️ Allow</td> <!-- Action -->
-            <td>Default allow traffic from this subnet to talk to the Internet</td> <!-- Description -->
         </tr>
         <tr>
             <td>65500</td> <!-- Priority -->
@@ -131,10 +124,15 @@ For example, an insecure NSG that allows all traffic to and from this subnet wou
             <td>Any</td> <!-- Source -->
             <td>Any</td> <!-- Destination -->
             <td>❌ Deny</td> <!-- Action -->
-            <td>Default Deny outbound traffic</td> <!-- Description -->
         </tr>
     </tbody>
 </table>
 
-We add our rules 
+We add our filter rules above the 4096 rules to create our NSG.
+
+
+
+
+
+
 
