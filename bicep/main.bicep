@@ -21,11 +21,6 @@ param UntrustedIPv4Subnet string = '10.0.255.224/27'
 param UntrustedIPv6Subnet string = 'fd00:6f08:7be9:ffff::/64'
 param UntrustedSubnetName string = 'untrusted'
 
-//Management Subnet
-param ManagementIPv4Subnet string = '10.0.100.0/27'
-param ManagementIPv6Subnet string = 'fd00:6f08:7be9:ff::/64'
-param ManagementSubnetName string = 'management'
-
 ////Public IP parameters
 param PublicIPDeploymentName string = 'SkylinePublicIP'
 param PublicIPv4AddressName string = 'skyline-public-ipv4'
@@ -135,15 +130,6 @@ module SkyVnet 'modules/vnet/vnet.bicep' = {
           ]
         }
       }
-      {
-        name: ManagementSubnetName
-        properties: {
-          addressPrefixes:[
-              ManagementIPv4Subnet
-              ManagementIPv6Subnet
-          ]
-        }
-      }
     ]
   }
 }
@@ -157,11 +143,7 @@ resource UntrustedSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' 
 resource TrustedSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
   name: '${SkynetVirtualNetworkName}/${TrustedSubnetName}'
 }
-/*
-resource ManagementSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' existing = {
-  name: ManagementSubnetName
-}
-*/
+
 // Public IPs
 module PublicIPAddresses 'modules/vnet/publicip.bicep' = {
   name: PublicIPDeploymentName
@@ -286,7 +268,6 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
     OPNVersion: OPNsenseVersion
     WALinuxVersion: WALinuxVersion
     TrustedSubnetIPv4Prefix: TrustedIPv4Subnet
-    ManagementSubnetIPv4Prefix: ManagementIPv4Subnet
     GithubPrivateToken: GithubPrivateToken 
     OPNsenseConfigXML: OPNsenseConfigXMLName
     PythonGatewayScript: PythonGatewayScript

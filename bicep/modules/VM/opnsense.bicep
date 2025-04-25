@@ -26,18 +26,16 @@ param ShellScriptName string
      $2 = OpnVersion - The version of OPNsense to install to this system
      $3 = WALinuxVersion - The version of the Azure Linux Agent to install to this system
      $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
-     $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
-     $6 = github token to download files from the private repo
-     $7 = file name of the OPNsense config file, default config.xml
-     $8 = file name of the python script to find gateway, default get_nic_gw.py
-     $9 = file name of the waagent actions configuration file, default waagent_actions.conf
+     $5 = github token to download files from the private repo
+     $6 = file name of the OPNsense config file, default config.xml
+     $7 = file name of the python script to find gateway, default get_nic_gw.py
+     $8 = file name of the waagent actions configuration file, default waagent_actions.conf
     */
 
 param OPNScriptURI string
 param OPNVersion string
 param WALinuxVersion string
 param TrustedSubnetIPv4Prefix string
-param ManagementSubnetIPv4Prefix string
 @secure()
 param GithubPrivateToken string
 param OPNsenseConfigXML string
@@ -50,7 +48,6 @@ var scriptParams = [
   OPNVersion
   WALinuxVersion
   TrustedSubnetIPv4Prefix //TODO needs to be TrustedSubnetPrefix for the get_nic_gw.py script to work correctly
-  ManagementSubnetIPv4Prefix //TODO needs to be ManagementSubnetPrefix for the management VM to recv proper routing/nat
   GithubPrivateToken
   OPNsenseConfigXML
   PythonGatewayScript
