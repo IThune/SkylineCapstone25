@@ -51,14 +51,35 @@ param PythonGatewayScript string = 'get_nic_gw.py'
 param AzureAgentActionsConfig string = 'actions_waagent.conf'
 
 //OPNsense Secret Parameters
-param AdminUsername string = 'ian-administrator'
+param AdminUsername string
 @secure()
 param AdminPassword string
 @secure()
 param GithubPrivateToken string
 
+////Zoneminder VM Parameters
+//General VM Parameters
+param ZoneminderVirtualMachineSize string = 'Standard_B1s'
+param ZoneminderVirtualMachineName string = 'skyline-nvr'
+
+//Zoneminder Networking Parameters
+param ZoneminderTrustedNicPrivateIPv4Address string = '10.0.0.5'
+
+//Zoneminder deployment script parameters
+param ZoneminderShellScriptName string = 'configurezoneminder.sh'
+param ZoneminderScriptURI string = 'https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/'
+
+//Zoneminder secret parameters
+param ZoneminderMySQLUsername string = 'zmuser'
+@secure()
+param ZoneminderMySQLPassword string
+param ZoneminderAdminUsername string
+@secure()
+param ZoneminderAdminPassword string
+
 //Network Security Group parameters
 param UntrustedNSGName string = 'untrusted-nsg'
+param TrustedNSGName string = 'trusted-nsg'
 
 //Route table parameters - allows traffic behind opnsense gateway to reach the internet
 param rtName string = 'skyline-default-route'
@@ -152,35 +173,81 @@ module PublicIPAddresses 'modules/vnet/publicip.bicep' = {
   }
 }
 
-// untrusted NSG
-// TODO tighten up these rules, these are test only!
+// Network Security Group definitions
 module UntrustedNSG 'modules/vnet/nsg.bicep' = {
   name: UntrustedNSGName
   params: {
     nsgName: UntrustedNSGName
     Location: location
     securityRules: [
+      // Inbound Rules
+      // Allow inbound wireguard traffic (51820 udp)
       {
-        name: 'In-Any'
+        name: 'Allow-WG-In-IPv4'
+        properties: {
+          priority: 4095
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          protocol: 'udp'
+          destinationPortRange: '51820'
+          access: 'Allow'
+          direction: 'Inbound'
+          destinationAddressPrefix: UntrustedIPv4Subnet
+        }
+      }
+      {
+        name: 'Allow-WG-In-IPv6'
+        properties: {
+          priority: 4096
+          sourceAddressPrefix: '*'
+          sourcePortRange: '*'
+          protocol: 'udp'
+          destinationPortRange: '51820'
+          access: 'Allow'
+          direction: 'Inbound'
+          destinationAddressPrefix: UntrustedIPv6Subnet
+        }
+      }
+      // Outbound Rules
+      //deny-any outbound rule
+      //inbound wireguard rules are stateful so no need to replicate them here
+      {
+        
+        name: 'Deny-InternetOut-Any'
         properties: {
           priority: 4096
           sourceAddressPrefix: '*'
           protocol: '*'
           destinationPortRange: '*'
-          access: 'Allow'
-          direction: 'Inbound'
+          access: 'Deny'
+          direction: 'Outbound'
           sourcePortRange: '*'
           destinationAddressPrefix: '*'
         }
       }
+    ]
+  }
+}
+
+module TrustedNSG 'modules/vnet/nsg.bicep' = {
+  name: TrustedNSGName
+  params: {
+    nsgName: TrustedNSGName
+    Location: location
+    securityRules: [
+      // Inbound rules
+      //Default Inbound rules apply
+
+      //Outbound rules
+      //deny-any outbound rule
       {
-        name: 'Out-Any'
+        name: 'Deny-InternetOut-Any'
         properties: {
           priority: 4096
           sourceAddressPrefix: '*'
           protocol: '*'
           destinationPortRange: '*'
-          access: 'Allow'
+          access: 'Deny'
           direction: 'Outbound'
           sourcePortRange: '*'
           destinationAddressPrefix: '*'
@@ -238,6 +305,24 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
   }
 }
 
-//TODO add the management VM
-//TODO add a containerd host VM to the trusted subnet
-
+// Zoneminder VM
+module Zoneminder 'modules/VM/zoneminder-host.bicep' = {
+  name: ZoneminderVirtualMachineName
+  params:{
+    Location: location
+    virtualMachineName: ZoneminderVirtualMachineName
+    virtualMachineSize: ZoneminderVirtualMachineSize
+    AdminUsername: ZoneminderAdminUsername
+    AdminPassword: ZoneminderAdminPassword
+    ZMScriptURI: ZoneminderScriptURI
+    ShellScriptName: ZoneminderShellScriptName
+    MySQLUsername: ZoneminderMySQLUsername
+    MySQLPassword: ZoneminderMySQLPassword
+    GithubPrivateToken: GithubPrivateToken
+    WAAgentActionsConfig: AzureAgentActionsConfig
+    nicStaticIPv4: ZoneminderTrustedNicPrivateIPv4Address
+    WALinuxVersion: WALinuxVersion
+    trustedSubnetId: TrustedSubnet.id
+    trustedNsgId: TrustedNSG.outputs.nsgID
+  }
+}

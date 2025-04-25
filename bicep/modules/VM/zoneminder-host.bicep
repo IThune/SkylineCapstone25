@@ -3,11 +3,11 @@
 param virtualMachineName string
 param virtualMachineSize string
 param Location string = resourceGroup().location
-param footageDiskName string
+param footageDiskName string = '${virtualMachineName}-footage-disk'
 
 //Networking Parameters
 param trustedSubnetId string
-param trustedNsgId string = ''
+param trustedNsgId string
 param nicStaticIPv4 string
 var nicName = '${virtualMachineName}-NIC'
 
@@ -93,5 +93,37 @@ resource Zoneminder 'Microsoft.Compute/virtualMachines@2023-07-01' = {
         }
       ]
     }
+    networkProfile: {
+      networkInterfaces: [
+        {
+          id:nic.outputs.nicId
+          properties:{
+            primary:true
+          }
+        }
+      ]
+    }
+  }
+  plan: {
+    name: '12'
+    publisher: 'debian'
+    product: 'debian-12'
   }
 }
+
+//Run custom shell script with image deployment
+resource vmext 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = {
+  parent: Zoneminder
+  name: 'ZMCustomScript'
+  location: Location
+  properties: {
+    publisher: 'Microsoft.OSTCExtensions'
+    type: 'CustomScriptForLinux'
+    typeHandlerVersion: '1.5'
+    autoUpgradeMinorVersion: false
+    settings:{
+      commandToExecute: runShellScriptCommand
+    }
+  }
+}
+output NicIP string = nic.outputs.nicIP
