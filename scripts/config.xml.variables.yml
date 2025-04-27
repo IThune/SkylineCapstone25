@@ -1,0 +1,61 @@
+hostname: skyline-gateway
+domain: lan
+timezone: # source from arm template
+
+interfaces:
+  - name: wan
+    device: em0
+    ipaddr: # source from arm template
+    subnet: # source from arm template
+    description: Untrusted NIC
+  - name: lan
+    device: em1
+    ipaddr: # source from arm template
+    subnet: # source from arm template
+    description: Trusted NIC
+  - name: 
+
+firewall_rules:
+# Floating rules
+
+# Wireguard interface rules
+
+# LAN interface rules
+
+# WAN interface rules
+
+aliases:
+# COUNTRYBLOCKLIST geoip blocklist
+# wireguard peer groups:
+  # wg_nvr_users
+  # wg_cctv_cameras
+  # wg_it_admins
+  # wg_server
+
+wireguard:
+  enabled: 1
+  tunnels:
+    - enabled: 1
+      name: skyline-vpn
+      interface: wg0
+      address: # source from arm template
+      port: 51820
+      private_key: # source from arm template, securely, or from az key vault preferably
+  peers:
+    # add peer list at az deploy time!
+    # leave endpoint address and endpoint port blank if possible
+    # Allowed IPs field on the opn gateway should be the assigned IP address of the client only
+    # idea: create peer generator runbook for entra id principals somehow so clients can easily and securely get on the network
+
+suricata:
+  enabled: 1
+  ips: 1
+  promisc: 1
+  homenet: #"[trusted subnet]" 
+  rulesets:
+    # download rulesets and add here at deploy time!
+  interfaces:
+    - lan
+  pattern_match: ac-ks
+
+  

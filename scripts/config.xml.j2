@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<opnsense>
+  <system>
+    <hostname>{{ hostname }}</hostname>
+    <domain>{{ domain }}</domain>
+    <timezone>{{ timezone }}</timezone>
+    <webgui>
+      <protocol>https</protocol>
+    </webgui>
+  </system>
+
+  <interfaces>
+    {% for iface in interfaces %}
+    <{{ iface.name }}>
+      <enable>1</enable>
+      <if>{{ iface.device }}</if>
+      <ipaddr>{{ iface.ipaddr }}</ipaddr>
+      <subnet>{{ iface.subnet }}</subnet>
+      <descr>{{ iface.description }}</descr>
+    </{{ iface.name }}>
+    {% endfor %}
+  </interfaces>
+
+  <filter>
+    {% for rule in firewall_rules %}
+    <rule>
+      <type>{{ rule.type }}</type>
+      <interface>{{ rule.interface }}</interface>
+      <ipprotocol>{{ rule.ipprotocol }}</ipprotocol>
+      <protocol>{{ rule.protocol }}</protocol>
+      <source>
+        <address>{{ rule.source }}</address>
+      </source>
+      <destination>
+        <address>{{ rule.destination }}</address>
+      </destination>
+      <descr>{{ rule.description }}</descr>
+      <enabled>{{ rule.enabled }}</enabled>
+    </rule>
+    {% endfor %}
+  </filter>
+
+  <aliases>
+    {% for alias in aliases %}
+    <alias>
+      <name>{{ alias.name }}</name>
+      <type>{{ alias.type }}</type>
+      <address>{{ alias.address }}</address>
+      <descr>{{ alias.description }}</descr>
+      <enabled>{{ alias.enabled }}</enabled>
+    </alias>
+    {% endfor %}
+  </aliases>
+
+  <OPNsense>
+    <wireguard>
+      <general>
+        <enabled>{{ wireguard.enabled }}</enabled>
+      </general>
+      <tunnels>
+        {% for tunnel in wireguard.tunnels %}
+        <tunnel>
+          <enabled>{{ tunnel.enabled }}</enabled>
+          <name>{{ tunnel.name }}</name>
+          <interface>{{ tunnel.interface }}</interface>
+          <address>{{ tunnel.address }}</address>
+          <port>{{ tunnel.port }}</port>
+          <private_key>{{ tunnel.private_key }}</private_key>
+        </tunnel>
+        {% endfor %}
+      </tunnels>
+      <peers>
+        {% for peer in wireguard.peers %}
+        <peer>
+          <enabled>{{ peer.enabled }}</enabled>
+          <name>{{ peer.name }}</name>
+          <public_key>{{ peer.public_key }}</public_key>
+          <allowed_ips>{{ peer.allowed_ips }}</allowed_ips>
+          <endpoint_address>{{ peer.endpoint_address }}</endpoint_address>
+          <endpoint_port>{{ peer.endpoint_port }}</endpoint_port>
+        </peer>
+        {% endfor %}
+      </peers>
+    </wireguard>
+
+    <intrusion_detection>
+      <enabled>{{ suricata.enabled }}</enabled>
+      <rulesets>
+        {% for rule in suricata.rulesets %}
+        <rule>{{ rule }}</rule>
+        {% endfor %}
+      </rulesets>
+      <interfaces>
+        {% for iface in suricata.interfaces %}
+        <item>{{ iface }}</item>
+        {% endfor %}
+      </interfaces>
+      <pattern_match>{{ suricata.pattern_match }}</pattern_match>
+      <promiscuous>{{ suricata.promiscuous }}</promiscuous>
+    </intrusion_detection>
+  </OPNsense>
+</opnsense>

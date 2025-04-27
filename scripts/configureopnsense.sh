@@ -9,11 +9,15 @@
 # $6 = file name of the OPNsense config file, default config.xml
 # $7 = file name of the python script to find gateway, default get_nic_gw.py
 # $8 = file name of the waagent actions configuration file, default waagent_actions.conf
+# $9 = file name of the opnsense jinja2 template
+# $10 = file name of the opnsense j2 template variables.yml file
+# $11 = file name of the opnsense config.xml generation script
 
 # install python3
 pkg install -y python3
 
 # download the OPNsense config.xml 
+# deprecated soon, use j2 template
 curl -H "Authorization: Bearer $5" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -O \
@@ -23,11 +27,27 @@ curl -H "Authorization: Bearer $5" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -O \
     -L "$1$7"
+# download the opnsense j2 template
+curl -H "Authorization: Bearer $5" \
+    -H 'Accept: application/vnd.github.v3.raw' \
+    -O \
+    -L "$1$9"
+# download the opnsense j2 template config variable definitions
+curl -H "Authorization: Bearer $5" \
+    -H 'Accept: application/vnd.github.v3.raw' \
+    -O \
+    -L "$1$10"
+# download the opnsense config.xml generation script
+curl -H "Authorization: Bearer $5" \
+    -H 'Accept: application/vnd.github.v3.raw' \
+    -O \
+    -L "$1$11"
 
 # Set OPNsense config.xml values
-gatewayIp=$(python3 get_nic_gw.py $4)
-sed -i "" "s/yyy.yyy.yyy.yyy/$gatewayIp/" $6 
-sed -i "" "s_zzz.zzz.zzz.zzz_$5_" $6
+# this process will be deprecated soon, use the j2 template instead.
+gatewayIp=$(python3 get_nic_gw.py $4) 
+sed -i "" "s/yyy.yyy.yyy.yyy/$gatewayIp/" $6 #sets the ip address of the lan interface
+#sed -i "" "s_zzz.zzz.zzz.zzz_$5_" $6   #sets the alias for management subnet, no longer needed
 cp $6 /usr/local/etc/config.xml
 
 #Download OPNSense Bootstrap and Permit Root Remote Login
@@ -39,10 +59,12 @@ sed -i "" 's/#PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
 #		pkg unlock -a
 #		pkg delete -fa
 # comment out the 'set -e' line to prevent script halt when these commands return 1
-# also change from instant reboot at the end to a 1 minute timer
+# also change from instant reboot at the end to a 5 minute timer
 sed -i "" "s/set -e/#set -e/g" opnsense-bootstrap.sh.in
-sed -i "" "s/reboot/shutdown -r +1/g" opnsense-bootstrap.sh.in
+sed -i "" "s/reboot/shutdown -r +5/g" opnsense-bootstrap.sh.in
 sh ./opnsense-bootstrap.sh.in -y -r "$2"
+
+# install pip, config.xml.generate.py dependencies
 
 # Add Azure waagent
 fetch https://github.com/Azure/WALinuxAgent/archive/refs/tags/v$3.tar.gz
