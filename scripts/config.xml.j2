@@ -38,6 +38,16 @@
       <enabled>{{ rule.enabled }}</enabled>
     </rule>
     {% endfor %}
+    {% for rule in firewall_normalization %}
+    <scrub>
+      <rule>
+        <interface>{{ rule.interface }}</interface>
+        <proto>{{ rule.protocol }}</proto>
+        <src>{{ rule.src }}</src>
+        <dst>{{ rule.dst }}</dst>
+        <max-mss>{{ rule.max-mss }}</max-mss>
+        <descr>{{ rule.description }}</descr>
+      </rule>
   </filter>
 
   <aliases>

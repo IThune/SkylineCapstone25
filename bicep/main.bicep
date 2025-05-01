@@ -25,8 +25,8 @@ param UntrustedSubnetName string = 'untrusted'
 param PublicIPDeploymentName string = 'SkylinePublicIP'
 param PublicIPv4AddressName string = 'skyline-public-ipv4'
 param PublicIPv6AddressName string = 'skyline-public-ipv6'
-param PublicIPv4DNSLabel string = 'skyline' //skyline.eastus.cloudapp.azure.com will resolve to this public IPv4 address
-param PublicIPv6DNSLabel string = 'skyline6'  //skyline6.eastus.cloudapp.azure.com will resolve to this public IPv6 address
+param PublicIPv4DNSLabel string = 'skylinetest' //skyline.eastus.cloudapp.azure.com will resolve to this public IPv4 address
+param PublicIPv6DNSLabel string = 'skyline6test'  //skyline6.eastus.cloudapp.azure.com will resolve to this public IPv6 address
 
 ////OPNsense VM Parameters
 //General VM Parameters
@@ -35,6 +35,7 @@ param OPNsenseVirtualMachineName string = 'skyline-gateway'
 
 //OPNsense Networking parameters
 param OPNsenseTrustedNicPrivateIPv4Address string = '10.0.0.4'
+param OPNsenseTrustedNicIPv4AddressCIDR string = '10.0.0.4/24'
 
 //OPNsense Bootstrap parameters
 param OPNsenseBootstrapURI string = 'https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/'
@@ -44,6 +45,9 @@ param WALinuxVersion string = '2.12.0.4'  //Azure Linux guest agent
 param OPNsenseConfigXMLName string = 'config.xml'
 param PythonGatewayScript string = 'get_nic_gw.py'
 param AzureAgentActionsConfig string = 'actions_waagent.conf'
+param OPNsenseConfigJ2TemplateName string = 'config.xml.j2'
+param OPNsenseConfigVariablesYmlName string = 'config.xml.variables.yml'
+param OPNsenseRenderConfigScriptName string = 'config.xml.generate.py'
 
 //OPNsense Secret Parameters
 param AdminUsername string
@@ -51,6 +55,13 @@ param AdminUsername string
 param AdminPassword string
 @secure()
 param GithubPrivateToken string
+@secure()
+@description('Run the command "wg genkey > srv-out" to generate a private key for this server and paste it here. Make sure to save the public key as well, run the command "cat srv-out | wg pubkey > srv-out.pub" to generate the public key for this server and access it later.')
+param WgServerPrivateKey string
+@secure()
+@description('Run the command "wg genkey > out" then "cat out | wg pubkey > out.pub" to generate a keypair. Paste the public key here to install it to the server. Save the private key for later to access the server. The private key does not get saved to the server.')
+param WgPeerPublicKey string
+
 
 ////Zoneminder VM Parameters
 //General VM Parameters
@@ -81,7 +92,7 @@ param rtName string = 'skyline-default-route'
 param rtEntryName string = 'default-route'
 param rtDestinationAddressPrefix string = '0.0.0.0/0'
 // next hop ip address is the trusted NIC ip for opnsense (OPNsenseTrustedNicPrivateIPv4Address)
-param nextHopType string = 'Virtual Appliance'
+param nextHopType string = 'VirtualAppliance'
 
 var rtEntries = [
   {
@@ -191,6 +202,20 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
         }
       }
       // Outbound Rules
+      // Allow https outbound for package updates
+      {
+        name: 'Allow-HttpOut-Any'
+        properties: {
+          priority: 4095
+          sourceAddressPrefix: UntrustedIPv4Subnet
+          sourcePortRange: '*'
+          protocol: 'tcp'
+          destinationPortRange: '443'
+          access: 'Allow'
+          direction: 'Outbound'
+          destinationAddressPrefix: '*'
+        }
+      }
       //deny-any outbound rule
       //inbound wireguard rules are stateful so no need to replicate them here
       {
@@ -256,7 +281,7 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
      $1 = OPNScriptURI - URI to the private github repo that contains config files and scripts, must end in '/'
      $2 = OpnVersion - The version of OPNsense to install to this system
      $3 = WALinuxVersion - The version of the Azure Linux Agent to install to this system
-     $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
+     $4 = Trusted Nic static IP address
      $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
      $6 = github token to download files from the private repo
      $7 = file name of the OPNsense config file, default config.xml
@@ -267,11 +292,16 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
     OPNScriptURI: OPNsenseBootstrapURI
     OPNVersion: OPNsenseVersion
     WALinuxVersion: WALinuxVersion
-    TrustedSubnetIPv4Prefix: TrustedIPv4Subnet
     GithubPrivateToken: GithubPrivateToken 
+    TrustedNicIPv4CIDR: OPNsenseTrustedNicIPv4AddressCIDR
     OPNsenseConfigXML: OPNsenseConfigXMLName
     PythonGatewayScript: PythonGatewayScript
     WAAgentActionsConfig: AzureAgentActionsConfig
+    OPNsenseConfigJ2TemplateName: OPNsenseConfigJ2TemplateName
+    OPNsenseConfigVariablesYmlName: OPNsenseConfigVariablesYmlName
+    OPNsenseRenderConfigScriptName: OPNsenseRenderConfigScriptName
+    WGServerPrivateKey: WgServerPrivateKey
+    WGPeerPublicKey: WgPeerPublicKey
     
     //Networking parameters
     trustedSubnetId: TrustedSubnet.id

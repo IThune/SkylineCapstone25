@@ -74,8 +74,8 @@ resource Zoneminder 'Microsoft.Compute/virtualMachines@2023-07-01' = {
     storageProfile: {
       imageReference: {
         publisher: 'Debian'
-        offer: 'debian'
-        sku: '12'
+        offer: 'debian-12-daily'
+        sku: '12-gen2'
         version: 'latest'
       }
       osDisk: {
@@ -104,11 +104,13 @@ resource Zoneminder 'Microsoft.Compute/virtualMachines@2023-07-01' = {
       ]
     }
   }
+  /* does not require plan information apparently?
   plan: {
-    name: '12'
+    name: '12-gen2'
     publisher: 'debian'
-    product: 'debian-12'
-  }
+    product: 'debian-12-daily'
+  
+  }*/
 }
 
 //Run custom shell script with image deployment

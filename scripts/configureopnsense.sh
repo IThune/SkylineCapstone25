@@ -4,7 +4,7 @@
 # $1 = OPNScriptURI - path to the github repo which contains the config files and scripts - needs to end with '/'
 # $2 = OpnVersion
 # $3 = WALinuxVersion
-# $4 = Trusted Nic subnet prefix - used to get the gateway for trusted subnet
+# $4 = Trusted Nic IP Address
 # $5 = github token to download files from the private repo
 # $6 = file name of the OPNsense config file, default config.xml
 # $7 = file name of the python script to find gateway, default get_nic_gw.py
@@ -12,9 +12,14 @@
 # $9 = file name of the opnsense jinja2 template
 # $10 = file name of the opnsense j2 template variables.yml file
 # $11 = file name of the opnsense config.xml generation script
+# $12 = the wireguard private key, used to configure the wireguard server
 
-# install python3
-pkg install -y python3
+# install necessary utilities
+pkg install -y python3 wireguard-tools ipcalc
+
+# install pip, config.xml.generate.py dependencies
+python -m ensurepip --upgrade
+pip3 install pyyaml jinja2
 
 # download the OPNsense config.xml 
 # deprecated soon, use j2 template
@@ -32,7 +37,7 @@ curl -H "Authorization: Bearer $5" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -O \
     -L "$1$9"
-# download the opnsense j2 template config variable definitions
+# download the opnsense yaml definitions
 curl -H "Authorization: Bearer $5" \
     -H 'Accept: application/vnd.github.v3.raw' \
     -O \
@@ -45,9 +50,30 @@ curl -H "Authorization: Bearer $5" \
 
 # Set OPNsense config.xml values
 # this process will be deprecated soon, use the j2 template instead.
-gatewayIp=$(python3 get_nic_gw.py $4) 
-sed -i "" "s/yyy.yyy.yyy.yyy/$gatewayIp/" $6 #sets the ip address of the lan interface
+#gatewayIp=$(python3 get_nic_gw.py $4) 
+#sed -i "" "s/yyy.yyy.yyy.yyy/$4/" $6 #sets the ip address of the lan interface
 #sed -i "" "s_zzz.zzz.zzz.zzz_$5_" $6   #sets the alias for management subnet, no longer needed
+
+
+# Configuring OPNsense
+
+# Sets the Wireguard server configuration in the yml config file (pub and priv keys)
+wgServerPubkey=$(printf $12 | wg pubkey)
+sed -i "" "s/WireguardServerPrivateKeyHere/$12/" $10
+sed -i "" "s/WireguardServerPublicKeyHere/$wgServerPubkey/" $10
+
+# Sets the Wireguard initial peer configuration in the yml config file
+sed -i "" "s/WireguardPeerPublicKeyHere/$13/" $10
+
+# Sets the LAN interface settings in the yml config file
+#LAN_ADDRESS=$(ipcalc $4 | grep Address | cut -d ' ' -f 4)
+#sed -i "" "s/LanIPv4AddressHere/$LAN_ADDRESS/" $10
+#LAN_SUBNET_MASK=$(ipcalc $4 | grep Netmask | cut -d ' ' -f 4)
+#sed -i "" "s/LanSubnetMaskHere/$LAN_SUBNET_MASK/" $10
+# Render the config template to config.xml
+python $11 $9
+
+# Drop the rendered config file into the correct directory to finish configuration
 cp $6 /usr/local/etc/config.xml
 
 #Download OPNSense Bootstrap and Permit Root Remote Login
@@ -64,8 +90,6 @@ sed -i "" "s/set -e/#set -e/g" opnsense-bootstrap.sh.in
 sed -i "" "s/reboot/shutdown -r +5/g" opnsense-bootstrap.sh.in
 sh ./opnsense-bootstrap.sh.in -y -r "$2"
 
-# install pip, config.xml.generate.py dependencies
-
 # Add Azure waagent
 fetch https://github.com/Azure/WALinuxAgent/archive/refs/tags/v$3.tar.gz
 tar -xvzf v$3.tar.gz
@@ -81,7 +105,7 @@ curl -H "Authorization: Bearer $5" \
 # make a link to python3 binary, disable disk swap, and set the actions configuration
 ln -s /usr/local/bin/python3.11 /usr/local/bin/python
 sed -i "" 's/ResourceDisk.EnableSwap=y/ResourceDisk.EnableSwap=n/' /etc/waagent.conf
-cp actions_waagent.conf /usr/local/opnsense/service/conf/actions.d
+cp $8 /usr/local/opnsense/service/conf/actions.d
 
 # Installing bash - This is a requirement for Azure custom Script extension to run
 pkg install -y bash

@@ -2,7 +2,7 @@ import yaml
 from jinja2 import Environment, FileSystemLoader
 
 # Load variables from YAML
-with open('variables.yaml') as f:
+with open('config.xml.variables.yml') as f:
     variables = yaml.safe_load(f)
 
 # Set up Jinja2 environment

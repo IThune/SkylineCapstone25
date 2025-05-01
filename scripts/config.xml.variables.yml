@@ -1,61 +1,186 @@
 hostname: skyline-gateway
 domain: lan
-timezone: # source from arm template
+timezone: America/Chicago
 
 interfaces:
   - name: wan
     device: em0
-    ipaddr: # source from arm template
-    subnet: # source from arm template
+    ipaddr: dhcp
     description: Untrusted NIC
   - name: lan
     device: em1
-    ipaddr: # source from arm template
-    subnet: # source from arm template
+    ipaddr: dhcp
     description: Trusted NIC
-  - name: 
+  - name: Loopback
+    device: lo0
+    ipaddr: 127.0.0.1
+    ipaddrv6: ::1
+    subnet: "8"
+    subnetv6: "128"
 
 firewall_rules:
 # Floating rules
 
 # Wireguard interface rules
+  # Allow Cameras access to NVR High Port Numbers
+  - type: pass
+    interface: wireguard
+    ipprotocol: inet
+    statetype: keep state
+    description: "Allow Cameras access to NVR High Port Numbers"
+    direction: in
+    quick: 1
+    protocol: tcp
+    source:
+      address: wg_cctv_cameras
+    destination:
+      address: 10.0.0.5
+      port: IANA_High_Ports
+  # Allow NVR users http access to Zoneminder Web UI
+  - type: pass
+    interface: wireguard
+    ipprotocol: inet
+    statetype: keep state
+    description: "Allow NVR users http access to Zoneminder Web UI"
+    direction: in
+    quick: 1
+    protocol: tcp
+    source:
+      address: wg_nvr_users
+    destination:
+      address: 10.0.0.5/32
+      port: 80
+
+  # Allow IT admins access to all nodes on the network
+  - type: pass
+    interface: wireguard
+    ipprotocol: inet
+    statetype: keep state
+    description: "Allow IT admins access to all nodes on the network"
+    direction: in
+    quick: 1
+    protocol: tcp
+    source:
+      address: wg_it_admins
+    destination:
+      any: 1
 
 # LAN interface rules
+  # block IPs matching GeoIP blocklist
+  - type: block
+    interface: lan
+    ipprotocol: inet46
+    statetype: keep state
+    description: GeoIP Blocklist Outbound Lan
+    direction: out
+    quick: 1
+    source:
+      network: lanip
+    destination:
+      address: COUNTRYBLOCKLIST
 
 # WAN interface rules
+  # block IPs matching GeoIP blocklist
+  - type: block
+    interface: wan
+    ipprotocol: inet46
+    statetype: keep state
+    description: GeoIP Blocklist Inbound Wan
+    direction: in
+    quick: 1
+    source:
+      address: COUNTRYBLOCKLIST
+    destination:
+      network: wanip
+
+  # pass inbound wireguard traffic, preserve statefulness
+  - type: pass
+    interface: wan
+    ipprotocol: inet
+    statetype: keep state
+    description: wireguard vpn
+    direction: in
+    log: 1
+    quick: 1
+    protocol: udp
+    source:
+      any: 1
+    destination:
+      network: wanip
+      port: 51820
+  
+# special normalization rule for wireguard
+firewall_normalization:
+  - interface: wireguard
+    protocol: any
+    src: any
+    dst: any
+    max-mss: 1380
+    description: Wireguard MSS Clamping IPv4
 
 aliases:
-# COUNTRYBLOCKLIST geoip blocklist
-# wireguard peer groups:
+  # COUNTRYBLOCKLIST geoip blocklist
+  - name: COUNTRYBLOCKLIST
+    type: GeoIP
+    content: "AE AF AM AZ BD BH BN BT CN CY GE HK ID IL IN IQ IR JO JP KG KH KP KR KW KZ LA LB LK MM MN MO MY NP OM PH PK PS QA SA SG SY TH TJ TL TM TW UZ VN YE EU RU CC CX IO KM MG MU MV RE SC TF YT NG"
+    enabled: 1
+    description: "GeoIP Blocklist by Country"
+  # wireguard peer groups
   # wg_nvr_users
-  # wg_cctv_cameras
-  # wg_it_admins
-  # wg_server
+  - name: wg_nvr_users
+    type: Network
+    content: 10.10.0.0/24
+    enabled: 1
+    description: "Wireguard NVR User Peer Group"
+    # wg_cctv_cameras
+  - name: wg_cctv_cameras
+    type: Network
+    content: 10.10.255.0/24
+    enabled: 1
+    description: "Wireguard CCTV Cameras Peer Group"
+    # wg_it_admins
+  - name: wg_it_admins
+    type: Network
+    content: 10.10.100.0/24
+    enabled: 1
+    description: "Wireguard IT Administrators Peer Group"
+    # wg_server
+  - name: wg_server
+    type: Host
+    content: 10.10.99.99
+    enabled: 1
+    description: "This Wireguard Instance"
+    # Port numbers - IANA high port numbers
+  - name: IANA_High_Ports
+    type: Port
+    content: 49152:65535
+    description: "All IANA High Port Numbers"
 
+# wireguard instance configuration
 wireguard:
   enabled: 1
   tunnels:
     - enabled: 1
       name: skyline-vpn
       interface: wg0
-      address: # source from arm template
+      address: 10.10.10.10
       port: 51820
-      private_key: # source from arm template, securely, or from az key vault preferably
+      private_key: WireguardServerPrivateKeyHere
   peers:
-    # add peer list at az deploy time!
-    # leave endpoint address and endpoint port blank if possible
-    # Allowed IPs field on the opn gateway should be the assigned IP address of the client only
-    # idea: create peer generator runbook for entra id principals somehow so clients can easily and securely get on the network
+    - enabled: 1
+      name: default-user
+      public_key: WireguardPeerPublicKeyHere
+      allowed_ips: 10.10.100.1/32
 
-suricata:
-  enabled: 1
-  ips: 1
-  promisc: 1
-  homenet: #"[trusted subnet]" 
-  rulesets:
-    # download rulesets and add here at deploy time!
-  interfaces:
-    - lan
-  pattern_match: ac-ks
+#suricata:
+#  enabled: 0
+#  ips: 1
+#  promisc: 1
+#  homenet: #"[trusted subnet]" 
+#  rulesets:
+#    # download rulesets and add here at deploy time!
+#  interfaces:
+#    - lan
+#  pattern_match: ac-ks
 
   

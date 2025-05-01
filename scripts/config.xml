@@ -1,4 +1,4 @@
- "a<?xml version="1.0"?>
+<?xml version="1.0"?>
 <opnsense>
   <version>11.2</version>
   <theme>cicada</theme>
@@ -1526,7 +1526,7 @@ NG</content>
             <disableroutes>0</disableroutes>
             <gateway/>
             <carp_depend_on/>
-            <peers>,,,</peers>
+            <peers></peers>
             <endpoint/>
             <peer_dns/>
           </server>
