@@ -35,7 +35,6 @@ param OPNsenseVirtualMachineName string = 'skyline-gateway'
 
 //OPNsense Networking parameters
 param OPNsenseTrustedNicPrivateIPv4Address string = '10.0.0.4'
-param OPNsenseTrustedNicIPv4AddressCIDR string = '10.0.0.4/24'
 
 //OPNsense Bootstrap parameters
 param OPNsenseBootstrapURI string = 'https://api.github.com/repos/IThune/SkylineCapstone25/contents/scripts/'
@@ -43,11 +42,7 @@ param OPNsenseBootstrapScriptName string = 'configureopnsense.sh'
 param OPNsenseVersion string = '25.1'
 param WALinuxVersion string = '2.12.0.4'  //Azure Linux guest agent
 param OPNsenseConfigXMLName string = 'config.xml'
-param PythonGatewayScript string = 'get_nic_gw.py'
 param AzureAgentActionsConfig string = 'actions_waagent.conf'
-param OPNsenseConfigJ2TemplateName string = 'config.xml.j2'
-param OPNsenseConfigVariablesYmlName string = 'config.xml.variables.yml'
-param OPNsenseRenderConfigScriptName string = 'config.xml.generate.py'
 
 //OPNsense Secret Parameters
 param AdminUsername string
@@ -55,12 +50,6 @@ param AdminUsername string
 param AdminPassword string
 @secure()
 param GithubPrivateToken string
-@secure()
-@description('Run the command "wg genkey > srv-out" to generate a private key for this server and paste it here. Make sure to save the public key as well, run the command "cat srv-out | wg pubkey > srv-out.pub" to generate the public key for this server and access it later.')
-param WgServerPrivateKey string
-@secure()
-@description('Run the command "wg genkey > out" then "cat out | wg pubkey > out.pub" to generate a keypair. Paste the public key here to install it to the server. Save the private key for later to access the server. The private key does not get saved to the server.')
-param WgPeerPublicKey string
 
 
 ////Zoneminder VM Parameters
@@ -167,6 +156,7 @@ module PublicIPAddresses 'modules/vnet/publicip.bicep' = {
 }
 
 // Network Security Group definitions
+// rules are stateful so no need to replicate them for both inbound/outbound
 module UntrustedNSG 'modules/vnet/nsg.bicep' = {
   name: UntrustedNSGName
   params: {
@@ -202,9 +192,22 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
         }
       }
       // Outbound Rules
-      // Allow https outbound for package updates
+      // Allow https and http outbound for package updates
       {
         name: 'Allow-HttpOut-Any'
+        properties: {
+          priority: 4094
+          sourceAddressPrefix: UntrustedIPv4Subnet
+          sourcePortRange: '*'
+          protocol: 'tcp'
+          destinationPortRange: '80'
+          access: 'Allow'
+          direction: 'Outbound'
+          destinationAddressPrefix: '*'
+        }
+      }
+      {
+        name: 'Allow-HttpsOut-Any'
         properties: {
           priority: 4095
           sourceAddressPrefix: UntrustedIPv4Subnet
@@ -217,7 +220,6 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
         }
       }
       //deny-any outbound rule
-      //inbound wireguard rules are stateful so no need to replicate them here
       {
         
         name: 'Deny-InternetOut-Any'
@@ -281,27 +283,17 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
      $1 = OPNScriptURI - URI to the private github repo that contains config files and scripts, must end in '/'
      $2 = OpnVersion - The version of OPNsense to install to this system
      $3 = WALinuxVersion - The version of the Azure Linux Agent to install to this system
-     $4 = Trusted Nic static IP address
-     $5 = Management subnet prefix - used to route/nat allow internet access from Management VM
-     $6 = github token to download files from the private repo
-     $7 = file name of the OPNsense config file, default config.xml
-     $8 = file name of the python script to find gateway, default get_nic_gw.py
-     $9 = waagent actions config file
+     $4 = github token to download files from the private repo
+     $5 = file name of the OPNsense config file, default config.xml
+     $6 = waagent actions config file
     */
     
     OPNScriptURI: OPNsenseBootstrapURI
     OPNVersion: OPNsenseVersion
     WALinuxVersion: WALinuxVersion
     GithubPrivateToken: GithubPrivateToken 
-    TrustedNicIPv4CIDR: OPNsenseTrustedNicIPv4AddressCIDR
     OPNsenseConfigXML: OPNsenseConfigXMLName
-    PythonGatewayScript: PythonGatewayScript
     WAAgentActionsConfig: AzureAgentActionsConfig
-    OPNsenseConfigJ2TemplateName: OPNsenseConfigJ2TemplateName
-    OPNsenseConfigVariablesYmlName: OPNsenseConfigVariablesYmlName
-    OPNsenseRenderConfigScriptName: OPNsenseRenderConfigScriptName
-    WGServerPrivateKey: WgServerPrivateKey
-    WGPeerPublicKey: WgPeerPublicKey
     
     //Networking parameters
     trustedSubnetId: TrustedSubnet.id

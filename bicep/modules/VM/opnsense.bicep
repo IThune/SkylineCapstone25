@@ -25,52 +25,29 @@ param ShellScriptName string
 # $1 = OPNScriptURI - path to the github repo which contains the config files and scripts - needs to end with '/'
 # $2 = OpnVersion
 # $3 = WALinuxVersion
-# $4 = Trusted Nic IP Address CIDR notation
-# $5 = github token to download files from the private repo
-# $6 = file name of the OPNsense config file, default config.xml
-# $7 = file name of the python script to find gateway, default get_nic_gw.py
-# $8 = file name of the waagent actions configuration file, default waagent_actions.conf
-# $9 = file name of the opnsense jinja2 template
-# $10 = file name of the opnsense j2 template variables.yml file
-# $11 = file name of the opnsense config.xml rendering script
-# $12 = the wireguard private key for the server, used to configure the wireguard server
-# $13 = the wireguard public key for the initial peer, gets installed to the server
+# $4 = github token to download files from the private repo
+# $5 = file name of the OPNsense config file, default config.xml
+# $6 = file name of the waagent actions configuration file, default waagent_actions.conf
 */
 
 param OPNScriptURI string
 param OPNVersion string
 param WALinuxVersion string
-param TrustedNicIPv4CIDR string
 @secure()
 param GithubPrivateToken string
 param OPNsenseConfigXML string
-param PythonGatewayScript string
 param WAAgentActionsConfig string
-param OPNsenseConfigJ2TemplateName string
-param OPNsenseConfigVariablesYmlName string
-param OPNsenseRenderConfigScriptName string
-@secure()
-param WGServerPrivateKey string
-@secure()
-param WGPeerPublicKey string
 
 var scriptParams = [ 
   OPNScriptURI
   OPNVersion
   WALinuxVersion
-  TrustedNicIPv4CIDR //TODO needs to be TrustedSubnetPrefix for the get_nic_gw.py script to work correctly
   GithubPrivateToken
   OPNsenseConfigXML
-  PythonGatewayScript
   WAAgentActionsConfig
-  OPNsenseConfigJ2TemplateName
-  OPNsenseConfigVariablesYmlName
-  OPNsenseRenderConfigScriptName
-  WGServerPrivateKey
-  WGPeerPublicKey
 ]
 // Installs curl package, uses curl to securely download the bootstrap script, runs the bootstrap script with the required params
-var runShellScriptCommand = '/bin/sh -c "pkg update && pkg install -y curl && curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${OPNScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}" | tee /dev/console'
+var runShellScriptCommand = '/bin/sh -c "pkg update && pkg install -y curl && curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${OPNScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
 
 //Secrets
 //TODO Azure Key Vault for secure storage and retrieval of secrets

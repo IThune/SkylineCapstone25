@@ -2,38 +2,38 @@
 <opnsense>
   <version>11.2</version>
   <theme>cicada</theme>
-  <sysctl>
-    <item>
+  <sysctl version="1.0.1">
+    <item uuid="d0f65072-f2bf-4921-95b5-5d1bd5910815">
       <tunable>debug.pfftpproxy</tunable>
       <value/>
       <descr>Disable the pf ftp proxy handler.</descr>
     </item>
-    <item>
+    <item uuid="d9dba701-4e4d-4564-8578-8a1649d378db">
       <tunable>vfs.read_max</tunable>
       <value/>
       <descr>Increase UFS read-ahead speeds to match current state of hard drives and NCQ. More information here: http://ivoras.sharanet.org/blog/tree/2010-11-19.ufs-read-ahead.html</descr>
     </item>
-    <item>
+    <item uuid="fda9cfa4-835f-44d6-b8e4-a5394e64899d">
       <tunable>net.inet.ip.portrange.first</tunable>
       <value/>
       <descr>Set the ephemeral port range to be lower.</descr>
     </item>
-    <item>
+    <item uuid="b51a728f-1650-4897-9484-6b5d07546b9c">
       <tunable>net.inet.tcp.blackhole</tunable>
       <value/>
       <descr>Drop packets to closed TCP ports without returning a RST</descr>
     </item>
-    <item>
+    <item uuid="5ae3aa1b-6d79-4063-be85-2c437c05578f">
       <tunable>net.inet.udp.blackhole</tunable>
       <value/>
       <descr>Do not send ICMP port unreachable messages for closed UDP ports</descr>
     </item>
-    <item>
+    <item uuid="2ef7d4b8-7f75-4b9a-ab26-9b957b5d3451">
       <tunable>net.inet.ip.random_id</tunable>
       <value/>
       <descr>Randomize the ID field in IP packets (default is 0: sequential IP IDs)</descr>
     </item>
-    <item>
+    <item uuid="73f071d1-dd6e-471f-ab1e-989c31bc5db4">
       <tunable>net.inet.ip.sourceroute</tunable>
       <value/>
       <descr>
@@ -42,7 +42,7 @@
         as part of the standard FreeBSD core system.
       </descr>
     </item>
-    <item>
+    <item uuid="005d7789-0033-4368-8be8-6b37ae3ffe3b">
       <tunable>net.inet.ip.accept_sourceroute</tunable>
       <value/>
       <descr>
@@ -51,7 +51,7 @@
         as part of the standard FreeBSD core system.
       </descr>
     </item>
-    <item>
+    <item uuid="fb637f47-c36a-44d4-ad03-85d2e0601440">
       <tunable>net.inet.icmp.drop_redirect</tunable>
       <value/>
       <descr>
@@ -60,7 +60,7 @@
         packets without returning a response.
       </descr>
     </item>
-    <item>
+    <item uuid="6819c20b-6b30-43c0-996d-21c923a3eed7">
       <tunable>net.inet.icmp.log_redirect</tunable>
       <value/>
       <descr>
@@ -68,117 +68,117 @@
         up your logs consuming your whole hard drive.
       </descr>
     </item>
-    <item>
+    <item uuid="a9f03ea0-6b8b-468e-8813-0df9152d4e9c">
       <tunable>net.inet.tcp.drop_synfin</tunable>
       <value/>
       <descr>Drop SYN-FIN packets (breaks RFC1379, but nobody uses it anyway)</descr>
     </item>
-    <item>
+    <item uuid="c62d2320-2170-4c3b-b355-7741abc38c5a">
       <tunable>net.inet.ip.redirect</tunable>
       <value/>
       <descr>Enable sending IPv4 redirects</descr>
     </item>
-    <item>
+    <item uuid="bcd28719-2642-4fe2-ad0c-df40fa836f0f">
       <tunable>net.inet6.ip6.redirect</tunable>
       <value/>
       <descr>Enable sending IPv6 redirects</descr>
     </item>
-    <item>
+    <item uuid="8a06626e-6bf8-491b-b53c-ac229d39d3b4">
       <tunable>net.inet6.ip6.use_tempaddr</tunable>
       <value/>
       <descr>Enable privacy settings for IPv6 (RFC 4941)</descr>
     </item>
-    <item>
+    <item uuid="643d9b22-1462-4d23-b669-840b2398934d">
       <tunable>net.inet6.ip6.prefer_tempaddr</tunable>
       <value/>
       <descr>Prefer privacy addresses and use them over the normal addresses</descr>
     </item>
-    <item>
+    <item uuid="f2d534e1-cfd4-4cac-be89-ac1de0c8a678">
       <tunable>net.inet.tcp.syncookies</tunable>
       <value/>
       <descr>Generate SYN cookies for outbound SYN-ACK packets</descr>
     </item>
-    <item>
+    <item uuid="55de15ea-b47f-4ab3-b402-efab4d2ff968">
       <tunable>net.inet.tcp.recvspace</tunable>
       <value/>
       <descr>Maximum incoming/outgoing TCP datagram size (receive)</descr>
     </item>
-    <item>
+    <item uuid="c0b3b470-694c-4e35-b88a-de47ce024361">
       <tunable>net.inet.tcp.sendspace</tunable>
       <value/>
       <descr>Maximum incoming/outgoing TCP datagram size (send)</descr>
     </item>
-    <item>
+    <item uuid="9e3c317b-da8d-43e2-b47f-a7eb673339a2">
       <tunable>net.inet.ip.fastforwarding</tunable>
       <value/>
       <descr>IP Fastforwarding</descr>
     </item>
-    <item>
+    <item uuid="a94bd618-c7c2-4330-a5b3-c88371ca6545">
       <tunable>net.inet.tcp.delayed_ack</tunable>
       <value/>
       <descr>Do not delay ACK to try and piggyback it onto a data packet</descr>
     </item>
-    <item>
+    <item uuid="8e1df7f6-ad56-4cfc-a04d-e24299363e42">
       <tunable>net.inet.udp.maxdgram</tunable>
       <value/>
       <descr>Maximum outgoing UDP datagram size</descr>
     </item>
-    <item>
+    <item uuid="732c3452-f042-4d8c-9c74-8dc838e1eb33">
       <tunable>net.link.bridge.pfil_onlyip</tunable>
       <value/>
       <descr>Handling of non-IP packets which are not passed to pfil (see if_bridge(4))</descr>
     </item>
-    <item>
+    <item uuid="c8901e30-8436-4534-a659-c71420ffbd10">
       <tunable>net.link.bridge.pfil_member</tunable>
       <value/>
       <descr>Set to 0 to disable filtering on the incoming and outgoing member interfaces.</descr>
     </item>
-    <item>
+    <item uuid="0dacebf0-a092-4b58-85c4-a685f6f50bd2">
       <tunable>net.link.bridge.pfil_bridge</tunable>
       <value/>
       <descr>Set to 1 to enable filtering on the bridge interface</descr>
     </item>
-    <item>
+    <item uuid="13beac56-255c-498e-8166-49c6c7b71ae1">
       <tunable>net.link.tap.user_open</tunable>
       <value/>
       <descr>Allow unprivileged access to tap(4) device nodes</descr>
     </item>
-    <item>
+    <item uuid="b2195b49-4af0-459b-8282-530859773253">
       <tunable>kern.randompid</tunable>
       <value/>
       <descr>Randomize PID's (see src/sys/kern/kern_fork.c: sysctl_kern_randompid())</descr>
     </item>
-    <item>
+    <item uuid="a1817c90-00db-487b-be33-5eecc32750dc">
       <tunable>net.inet.ip.intr_queue_maxlen</tunable>
       <value/>
       <descr>Maximum size of the IP input queue</descr>
     </item>
-    <item>
+    <item uuid="a9c0629a-7df0-44d9-ba4e-a1a23b5d9698">
       <tunable>hw.syscons.kbd_reboot</tunable>
       <value/>
       <descr>Disable CTRL+ALT+Delete reboot from keyboard.</descr>
     </item>
-    <item>
+    <item uuid="5272c63f-24ef-466b-9029-ff0870b149cf">
       <tunable>net.inet.tcp.log_debug</tunable>
       <value/>
       <descr>Enable TCP extended debugging</descr>
     </item>
-    <item>
+    <item uuid="c7f147e4-2d09-45c4-81e7-2ee6c5967d72">
       <tunable>net.inet.icmp.icmplim</tunable>
       <value/>
       <descr>Set ICMP Limits</descr>
     </item>
-    <item>
+    <item uuid="1853d318-f038-40c9-b9cf-52c20ffe20a5">
       <tunable>net.inet.tcp.tso</tunable>
       <value/>
       <descr>TCP Offload Engine</descr>
     </item>
-    <item>
+    <item uuid="a8f2733b-1e65-4792-8fb0-80a97afbc1fc">
       <tunable>net.inet.udp.checksum</tunable>
       <value/>
       <descr>UDP Checksums</descr>
     </item>
-    <item>
+    <item uuid="b70b69e2-3823-4dc6-ac55-1a4569673357">
       <tunable>kern.ipc.maxsockbuf</tunable>
       <value/>
       <descr>Maximum socket buffer size</descr>
@@ -189,7 +189,7 @@
     <hostname>OPNsense</hostname>
     <domain>localhost</domain>
     <dnsallowoverride>1</dnsallowoverride>
-    <group>
+    <group uuid="de508243-140a-458f-b0f7-a5b7ba9d728c">
       <gid>1999</gid>
       <name>admins</name>
       <scope>system</scope>
@@ -197,7 +197,7 @@
       <priv>user-shell-access,page-all</priv>
       <member>0</member>
     </group>
-    <user>
+    <user uuid="98d65863-f837-4acc-a167-fd6213c114cb">
       <uid>0</uid>
       <name>root</name>
       <scope>system</scope>
@@ -211,7 +211,7 @@
       <apikeys/>
       <priv/>
       <descr>System Administrator</descr>
-      <dashboard>eyJvcHRpb25zIjpbXSwid2lkZ2V0cyI6W3siaWQiOiJjcHUiLCJtaW5XIjoyLCJ4IjowLCJ5IjowLCJoIjoyMDYsIndpZGdldCI6eyJncmFwaHMiOlsidG90YWwiXX0sInciOjJ9LHsiaWQiOiJ0cmFmZmljIiwibWluVyI6MiwieCI6MiwieSI6MCwiaCI6NDcxLCJ3aWRnZXQiOnsiaW50ZXJmYWNlcyI6WyJsYW4iLCJ3YW4iXX0sInciOjJ9LHsiaWQiOiJpbnRlcmZhY2VzdGF0aXN0aWNzIiwibWluVyI6MiwieCI6NCwieSI6MCwidyI6NCwiaCI6MTQ4LCJ3aWRnZXQiOltdfSx7ImlkIjoiZmlyZXdhbGwiLCJtaW5XIjoyLCJ4Ijo4LCJ5IjowLCJ3Ijo0LCJoIjo0NzcsIndpZGdldCI6W119LHsiaWQiOiJzeXN0ZW1pbmZvcm1hdGlvbiIsIm1pblciOjIsIngiOjQsInkiOjE0OCwiaCI6MzkyLCJ3aWRnZXQiOltdLCJ3Ijo0fSx7ImlkIjoiZGlzayIsIm1pblciOjEsIngiOjAsInkiOjIwNiwiaCI6MTYxLCJ3aWRnZXQiOltdLCJ3IjpudWxsfSx7ImlkIjoibWVtb3J5IiwibWluVyI6MSwieCI6MSwieSI6MjA2LCJoIjoxNjEsIndpZGdldCI6W10sInciOm51bGx9LHsiaWQiOiJzZXJ2aWNlcyIsIm1pblciOjIsIngiOjgsInkiOjQ3NywidyI6NCwic2l6ZVRvQ29udGVudCI6NTk5LCJoIjo1OTksIndpZGdldCI6W119LHsiaWQiOiJnYXRld2F5cyIsIm1pblciOjIsIngiOjQsInkiOjU0MCwic2l6ZVRvQ29udGVudCI6Mjk3LCJoIjoyOTcsIndpZGdldCI6eyJnYXRld2F5cyI6WyJXQU5fREhDUDYiLCJXQU5fREhDUCIsImVhZjAwNGQ3LTM0MjEtNDMzZi1hZTRmLWUzYWMwMGU3NGRjMiJdfSwidyI6Mn0seyJpZCI6ImFubm91bmNlbWVudHMiLCJtaW5XIjoyLCJ4Ijo2LCJ5Ijo1NDAsInNpemVUb0NvbnRlbnQiOjM1MCwiaCI6MzUwLCJ3aWRnZXQiOltdLCJ3IjoyfV19</dashboard>
+      <dashboard>eyJvcHRpb25zIjpbXSwid2lkZ2V0cyI6W3siaWQiOiJjcHUiLCJtaW5XIjoyLCJ4IjowLCJ5IjowLCJoIjoyMDYsIndpZGdldCI6eyJncmFwaHMiOlsidG90YWwiXX0sInciOjJ9LHsiaWQiOiJ0cmFmZmljIiwibWluVyI6MiwieCI6MiwieSI6MCwiaCI6NDcwLCJ3aWRnZXQiOnsiaW50ZXJmYWNlcyI6WyJsYW4iLCJ3YW4iXX0sInciOjJ9LHsiaWQiOiJpbnRlcmZhY2VzdGF0aXN0aWNzIiwibWluVyI6MiwieCI6NCwieSI6MCwidyI6NCwiaCI6MjgyLCJ3aWRnZXQiOltdfSx7ImlkIjoiZmlyZXdhbGwiLCJtaW5XIjoyLCJ4Ijo4LCJ5IjowLCJ3Ijo0LCJoIjoyODIsIndpZGdldCI6W119LHsiaWQiOiJkaXNrIiwibWluVyI6MSwieCI6MCwieSI6MjA2LCJoIjoxMTQsIndpZGdldCI6W10sInciOm51bGx9LHsiaWQiOiJtZW1vcnkiLCJtaW5XIjoxLCJ4IjoxLCJ5IjoyMDYsImgiOjExNCwid2lkZ2V0IjpbXSwidyI6bnVsbH0seyJpZCI6InN5c3RlbWluZm9ybWF0aW9uIiwibWluVyI6MiwieCI6NCwieSI6MjgyLCJoIjo1MjgsIndpZGdldCI6W10sInciOjR9LHsiaWQiOiJzZXJ2aWNlcyIsIm1pblciOjIsIngiOjgsInkiOjI4MiwidyI6NCwic2l6ZVRvQ29udGVudCI6NTk5LCJoIjo1OTgsIndpZGdldCI6W119LHsiaWQiOiJhbm5vdW5jZW1lbnRzIiwibWluVyI6MiwieCI6MCwieSI6MzIwLCJzaXplVG9Db250ZW50IjozNTAsImgiOjM1MCwid2lkZ2V0IjpbXSwidyI6Mn0seyJpZCI6ImdhdGV3YXlzIiwibWluVyI6MiwieCI6MiwieSI6NDcwLCJzaXplVG9Db250ZW50IjoyOTcsImgiOjI5Nywid2lkZ2V0Ijp7ImdhdGV3YXlzIjpbIldBTl9ESENQNiIsIldBTl9ESENQIiwiZWFmMDA0ZDctMzQyMS00MzNmLWFlNGYtZTNhYzAwZTc0ZGMyIl19LCJ3IjoyfV19</dashboard>
     </user>
     <nextuid>2000</nextuid>
     <nextgid>2000</nextgid>
@@ -274,7 +274,7 @@
     <dns6gw>none</dns6gw>
     <dns7gw>none</dns7gw>
     <dns8gw>none</dns8gw>
-    <firmware>
+    <firmware version="1.0.1">
       <mirror/>
       <flavour/>
       <plugins>os-acme-client,os-caddy,os-theme-cicada</plugins>
@@ -369,7 +369,7 @@
     <reverse/>
   </syslog>
   <filter>
-    <rule>
+    <rule uuid="85e3ff4a-4dfd-4518-a848-a3c7e3467ed0">
       <type>pass</type>
       <interface>wan</interface>
       <ipprotocol>inet</ipprotocol>
@@ -397,7 +397,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </created>
     </rule>
-    <rule>
+    <rule uuid="69feb35a-4667-4321-b661-de5c0b622d02">
       <type>block</type>
       <interface>wan</interface>
       <ipprotocol>inet46</ipprotocol>
@@ -421,7 +421,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </created>
     </rule>
-    <rule>
+    <rule uuid="063bd9ed-aa48-4ff8-be51-90e35e313317">
       <type>pass</type>
       <interface>lan</interface>
       <ipprotocol>inet</ipprotocol>
@@ -447,7 +447,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </created>
     </rule>
-    <rule>
+    <rule uuid="001ae01c-6ea1-4d9b-9bfe-5991025669ba">
       <type>block</type>
       <interface>lan</interface>
       <ipprotocol>inet46</ipprotocol>
@@ -466,7 +466,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </updated>
     </rule>
-    <rule>
+    <rule uuid="66f7ca23-67ea-4098-83bf-34bc868267aa">
       <type>pass</type>
       <interface>lan</interface>
       <ipprotocol>inet46</ipprotocol>
@@ -491,7 +491,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </created>
     </rule>
-    <rule>
+    <rule uuid="6cf25689-51cc-4ba1-a815-209865442661">
       <type>pass</type>
       <interface>wireguard</interface>
       <ipprotocol>inet</ipprotocol>
@@ -518,7 +518,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </created>
     </rule>
-    <rule>
+    <rule uuid="a0dd1393-ff66-4449-9a82-8ffac70a448d">
       <type>pass</type>
       <interface>wireguard</interface>
       <ipprotocol>inet</ipprotocol>
@@ -545,7 +545,7 @@
         <description>/firewall_rules_edit.php made changes</description>
       </created>
     </rule>
-    <rule>
+    <rule uuid="0159d06e-c36e-40a7-a0ec-4eb2e1dc20f2">
       <type>pass</type>
       <interface>wireguard</interface>
       <ipprotocol>inet</ipprotocol>
@@ -645,18 +645,18 @@
     <column_count>2</column_count>
   </widgets>
   <revision>
-    <username>root@10.10.100.1</username>
-    <description>/api/core/dashboard/saveWidgets made changes</description>
-    <time>1745787182.042</time>
+    <username>(system)</username>
+    <description>/usr/local/opnsense/scripts/OPNsense/AcmeClient/lecert.php made changes</description>
+    <time>1746165616.6492</time>
   </revision>
   <OPNsense>
-    <captiveportal>
+    <captiveportal version="1.0.3">
       <zones/>
       <templates/>
     </captiveportal>
-    <cron>
+    <cron version="1.0.4">
       <jobs>
-        <job>
+        <job uuid="26d71a85-7f02-4f74-ac0a-4b60928a1751">
           <origin>AcmeClient</origin>
           <enabled>1</enabled>
           <minutes>0</minutes>
@@ -669,7 +669,7 @@
           <parameters/>
           <description>AcmeClient Cronjob for Certificate AutoRenewal</description>
         </job>
-        <job>
+        <job uuid="f3ca649c-bd18-499a-8c0e-be3c14762d92">
           <origin>IDS</origin>
           <enabled>0</enabled>
           <minutes>0</minutes>
@@ -684,7 +684,7 @@
         </job>
       </jobs>
     </cron>
-    <Netflow>
+    <Netflow version="1.0.1">
       <capture>
         <interfaces/>
         <egress_only>wan</egress_only>
@@ -697,264 +697,264 @@
       <activeTimeout>1800</activeTimeout>
       <inactiveTimeout>15</inactiveTimeout>
     </Netflow>
-    <IDS>
+    <IDS version="1.1.0">
       <rules/>
       <policies/>
       <userDefinedRules/>
       <files>
-        <file>
+        <file uuid="d09f4d06-5567-46c6-bae9-f77e298bb03d">
           <filename>opnsense.uncategorized.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="eea0c6d2-243e-4973-ae87-2d2f3d455935">
           <filename>opnsense.test.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="3496f7ed-5c11-46c5-a1ef-fb6f89228811">
           <filename>opnsense.social_media.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="0eefd879-4da6-4ff5-954a-4d90e55e6b65">
           <filename>opnsense.messaging.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="a3140119-64ff-48da-b26a-302e4303d798">
           <filename>opnsense.media_streaming.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="1f65680c-c928-43f6-a888-090de1824c62">
           <filename>opnsense.mail.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="3a9cb83a-4dd1-4382-a3a3-b360ba707e37">
           <filename>opnsense.file_transfer.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="131e3c90-31c9-48fb-8827-30ec1cfa563e">
           <filename>tor.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="d6fb70cd-712c-443e-9104-8ba8795bafc4">
           <filename>threatview_CS_c2.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="ee80519b-3792-4ea0-b16c-c3f4d08c2034">
           <filename>emerging-worm.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="f172d785-8133-4193-8d76-855e68f63b8a">
           <filename>emerging-web_specific_apps.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="76171eb2-f88d-4559-9241-d34f74a24952">
           <filename>emerging-web_server.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="758263bb-224a-4ee1-80ff-ed67ca4084b9">
           <filename>emerging-web_client.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="16bfe696-f194-4e22-b5cb-bebe7d3c99f6">
           <filename>emerging-voip.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="e0ac282b-b311-4c9c-b3fd-1db5ab654e74">
           <filename>emerging-user_agents.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="76dfae96-cf2f-4428-82f8-1db33721c2c9">
           <filename>emerging-tftp.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="13ab4b70-4312-4a27-9aa2-f231813eccf1">
           <filename>emerging-telnet.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="c7add6b4-8d43-4744-94cd-fad94b02640f">
           <filename>emerging-sql.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="bb058429-3b4a-4b35-ac20-a11f63fd844c">
           <filename>emerging-snmp.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="19bf5342-93d6-494e-9700-6af36985e9d7">
           <filename>emerging-smtp.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="bcf29612-af14-4037-a64e-54d44cb4567b">
           <filename>emerging-shellcode.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="1e4733ba-d8db-4d0a-8b7c-d65f96fc12a5">
           <filename>emerging-scan.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="f5145154-6801-4529-8ca7-4714f202024b">
           <filename>emerging-scada.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="732f8c02-f99d-47e7-ac5c-1e7f1f141ae6">
           <filename>emerging-rpc.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="083336ef-c738-480d-8f25-54c6c714e8c4">
           <filename>emerging-pop3.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="3ca0c68b-9aec-4ea5-b52e-6bc3b947d387">
           <filename>emerging-policy.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="d8699217-c918-4939-8da8-673bb2fcae96">
           <filename>emerging-phishing.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="4ee816e4-de33-4fda-9986-1e33772f18f0">
           <filename>emerging-p2p.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="02380d1a-48a4-4253-bbfe-2cff8ce5a3c9">
           <filename>emerging-netbios.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="b3ed4073-312a-4c22-8776-cb0a3bb47fa0">
           <filename>emerging-mobile_malware.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="81c3ce6a-3d43-484f-904a-a5130d91b279">
           <filename>emerging-misc.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="f2f8733f-67c0-4231-ba24-6800519480a8">
           <filename>emerging-malware.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="deff6100-fcdf-488c-94bc-f375d4e3010c">
           <filename>emerging-ja3.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="7353132e-f3be-4182-932b-4580debf402a">
           <filename>emerging-info.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="4fc0255c-81eb-4caa-b407-16d19eae8c80">
           <filename>emerging-inappropriate.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="284f193a-657f-4a2f-acbd-45456c862638">
           <filename>emerging-imap.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="2cf62902-7dd0-41c5-a39c-fc27fed1ff84">
           <filename>emerging-icmp_info.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="d1b50424-e7e0-4a40-af5a-6a8d96298e00">
           <filename>emerging-icmp.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="f94026ef-faae-4560-a1c1-f95e146dc294">
           <filename>emerging-hunting.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="941265e2-9360-477d-b821-0215ab736f9f">
           <filename>emerging-games.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="d2559381-5ca2-4be5-8459-6a641993fd1d">
           <filename>emerging-ftp.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="07345273-d336-433e-9a2d-ce5f901ea3be">
           <filename>emerging-exploit_kit.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="ff412432-6a59-4212-a0e6-1149c81a9bfc">
           <filename>emerging-exploit.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="009eeab2-08e5-4932-8d8f-ca820a9daeae">
           <filename>emerging-dos.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="541f316b-c973-4cb7-9547-59c9868ce1bc">
           <filename>emerging-dns.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="807fd677-f202-42cb-8017-3b460479b21a">
           <filename>emerging-deleted.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="08ba490b-307d-45b3-8e94-337be28a8fca">
           <filename>emerging-current_events.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="80fbe5b5-9b3c-4819-9d48-ea6d15c5d0bf">
           <filename>emerging-coinminer.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="504315cb-10f1-4820-91bd-064ecdcddf1b">
           <filename>emerging-chat.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="668ca124-b386-4cda-aaef-5375fe5b7514">
           <filename>emerging-attack_response.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="63b3d905-3e0c-4416-8c42-e31b9ffe3016">
           <filename>emerging-adware_pup.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="b56cf641-688d-49a9-8c47-569be70e1ed4">
           <filename>emerging-activex.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="2a84f9e4-5d41-4e7e-98fe-ea1e798145d3">
           <filename>dshield.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="13d409f8-757d-44f3-a7c0-25e5c3cc2af4">
           <filename>drop.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="b58a0a0c-80ad-46ba-aaf8-f1303e7f2157">
           <filename>compromised.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="045bda7a-89fa-4736-b991-3fc43a5b65d9">
           <filename>ciarmy.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="846c932b-bc37-4339-b659-0a19833dc5f0">
           <filename>botcc.portgrouped.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="909c5fc8-0b03-498e-9e19-fcb7429b92ce">
           <filename>botcc.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="0da12079-eaec-4d08-a169-8147b5e0b3fa">
           <filename>3coresec.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="439fa83b-a19d-4a9a-b58d-27db0eeb3db6">
           <filename>abuse.ch.urlhaus.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="ae74b9b0-5761-4877-ad87-91ce7656579a">
           <filename>abuse.ch.threatfox.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="c2deb9c4-1bbd-4fe7-b75b-d9cee1be3464">
           <filename>abuse.ch.sslipblacklist.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="a450c4b9-92af-4ba0-b4df-3e8ef2dfde41">
           <filename>abuse.ch.sslblacklist.rules</filename>
           <enabled>0</enabled>
         </file>
-        <file>
+        <file uuid="c1943caf-e4fc-45ec-b94c-1d30e4e15184">
           <filename>abuse.ch.feodotracker.rules</filename>
           <enabled>0</enabled>
         </file>
@@ -967,7 +967,7 @@
         <interfaces>lan</interfaces>
         <homenet>192.168.0.0/16,10.0.0.0/8,172.16.0.0/12</homenet>
         <defaultPacketSize/>
-        <UpdateCron></UpdateCron>
+        <UpdateCron>f3ca649c-bd18-499a-8c0e-be3c14762d92</UpdateCron>
         <AlertLogrotate>W0D23</AlertLogrotate>
         <AlertSaveLogs>4</AlertSaveLogs>
         <MPMAlgo>ac</MPMAlgo>
@@ -995,7 +995,7 @@
         </eveLog>
       </general>
     </IDS>
-    <proxy>
+    <proxy version="1.0.0">
       <general>
         <enabled>0</enabled>
         <icpPort/>
@@ -1084,40 +1084,24 @@
         </authentication>
       </forward>
     </proxy>
-    <TrafficShaper>
+    <TrafficShaper version="1.0.3">
       <pipes/>
       <queues/>
       <rules/>
     </TrafficShaper>
     <Firewall>
-      <Lvtemplate>
+      <Lvtemplate version="0.0.1">
         <templates/>
       </Lvtemplate>
-      <Category>
+      <Category version="1.0.0">
         <categories/>
       </Category>
-      <Alias>
+      <Alias version="1.0.1">
         <geoip>
           <url>https://1147453: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@download.maxmind.com/geoip/databases/GeoLite2-Country-CSV/download?suffix=zip</url>
         </geoip>
         <aliases>
-          <alias>
-            <enabled>1</enabled>
-            <name>management</name>
-            <type>network</type>
-            <path_expression/>
-            <proto/>
-            <interface/>
-            <counters>0</counters>
-            <updatefreq/>
-            <content>10.0.100.0/27</content>
-            <password/>
-            <username/>
-            <authtype/>
-            <categories/>
-            <description/>
-          </alias>
-          <alias>
+          <alias uuid="79057c19-56ac-4ec4-bb01-a741ce84448e">
             <enabled>1</enabled>
             <name>COUNTRYBLOCKLIST</name>
             <type>geoip</type>
@@ -1195,7 +1179,7 @@ NG</content>
             <categories/>
             <description/>
           </alias>
-          <alias>
+          <alias uuid="59c7be61-b210-4749-80cc-aaaf19463f39">
             <enabled>1</enabled>
             <name>nginx_autoblock</name>
             <type>external</type>
@@ -1211,7 +1195,7 @@ NG</content>
             <categories/>
             <description/>
           </alias>
-          <alias>
+          <alias uuid="c01633b1-45b5-4335-9eed-eaf20db1cb7f">
             <enabled>1</enabled>
             <name>wg_nvr_users</name>
             <type>network</type>
@@ -1227,7 +1211,7 @@ NG</content>
             <categories/>
             <description>Wireguard NVR User Peer Group</description>
           </alias>
-          <alias>
+          <alias uuid="1e921b39-830b-4661-ad13-ce36932027d1">
             <enabled>1</enabled>
             <name>wg_cctv_cameras</name>
             <type>network</type>
@@ -1243,7 +1227,7 @@ NG</content>
             <categories/>
             <description>Wireguard CCTV Cameras Peer Group</description>
           </alias>
-          <alias>
+          <alias uuid="15a8cc32-9a8a-4c0b-8f93-97a06fb03cf6">
             <enabled>1</enabled>
             <name>wg_it_admins</name>
             <type>network</type>
@@ -1259,7 +1243,7 @@ NG</content>
             <categories/>
             <description>Wireguard IT Admins Peer Group</description>
           </alias>
-          <alias>
+          <alias uuid="635e62e2-77db-467f-a847-e2e0d14c2eb5">
             <enabled>1</enabled>
             <name>wg_server</name>
             <type>host</type>
@@ -1275,7 +1259,7 @@ NG</content>
             <categories/>
             <description>This Wireguard Instance</description>
           </alias>
-          <alias>
+          <alias uuid="010524b9-f46b-4679-bd98-25201ff6e8b6">
             <enabled>1</enabled>
             <name>IANA_High_Ports</name>
             <type>port</type>
@@ -1293,14 +1277,14 @@ NG</content>
           </alias>
         </aliases>
       </Alias>
-      <Filter>
+      <Filter version="1.0.4">
         <rules/>
         <snatrules/>
         <npt/>
         <onetoone/>
       </Filter>
     </Firewall>
-    <unboundplus>
+    <unboundplus version="1.0.12">
       <general>
         <enabled>1</enabled>
         <port>53</port>
@@ -1383,7 +1367,7 @@ NG</content>
       <aliases/>
     </unboundplus>
     <quagga>
-      <general>
+      <general version="1.0.3">
         <enabled>0</enabled>
         <profile>traditional</profile>
         <enablecarp>0</enablecarp>
@@ -1392,7 +1376,7 @@ NG</content>
         <sysloglevel>notifications</sysloglevel>
         <fwrules>1</fwrules>
       </general>
-      <ospf>
+      <ospf version="1.1.0">
         <enabled>0</enabled>
         <carp_demote>0</carp_demote>
         <routerid/>
@@ -1408,7 +1392,7 @@ NG</content>
         <routemaps/>
         <redistributions/>
       </ospf>
-      <ospf6>
+      <ospf6 version="1.1.0">
         <enabled>0</enabled>
         <carp_demote>0</carp_demote>
         <routerid/>
@@ -1421,7 +1405,7 @@ NG</content>
         <routemaps/>
         <redistributions/>
       </ospf6>
-      <rip>
+      <rip version="1.0.3">
         <enabled>0</enabled>
         <version>2</version>
         <networks/>
@@ -1429,11 +1413,11 @@ NG</content>
         <redistribute/>
         <defaultmetric/>
       </rip>
-      <static>
+      <static version="1.0.0">
         <enabled>0</enabled>
         <routes/>
       </static>
-      <bgp>
+      <bgp version="1.1.0">
         <enabled>0</enabled>
         <asnumber>65551</asnumber>
         <distance/>
@@ -1450,23 +1434,23 @@ NG</content>
         <peergroups/>
         <redistributions/>
       </bgp>
-      <bfd>
+      <bfd version="1.0.1">
         <enabled>0</enabled>
         <neighbors/>
       </bfd>
     </quagga>
-    <OpenVPN>
+    <OpenVPN version="1.0.1">
       <Overwrites/>
       <Instances/>
       <StaticKeys/>
     </OpenVPN>
-    <OpenVPNExport>
+    <OpenVPNExport version="0.0.1">
       <servers/>
     </OpenVPNExport>
     <wireguard>
-      <client>
+      <client version="1.0.0">
         <clients>
-          <client>
+          <client uuid="ffca1d2e-c782-44a3-a13c-18e10785a7d8">
             <enabled>1</enabled>
             <name>cctv-cam-1</name>
             <pubkey>BsZXoYeRnjfca8/9L1lQ62QoAn7Xd5uAxjN3XH2f+AA=</pubkey>
@@ -1476,7 +1460,7 @@ NG</content>
             <serverport/>
             <keepalive>30</keepalive>
           </client>
-          <client>
+          <client uuid="c8dde76f-10b8-4c13-a0bf-45344ba39c43">
             <enabled>1</enabled>
             <name>luka-admin</name>
             <pubkey>QsdMDEER6M9BS5H/syJ2BM7q3rU2xbNinVgKiqvk0E8=</pubkey>
@@ -1486,7 +1470,7 @@ NG</content>
             <serverport/>
             <keepalive/>
           </client>
-          <client>
+          <client uuid="51944a26-e1d5-47a1-815f-6e3708ad9425">
             <enabled>1</enabled>
             <name>ian-t-admin</name>
             <pubkey>oILBpPVzkZmwbVpZL2F+9IHf5pZRdKVu+gWU/mEKfh8=</pubkey>
@@ -1496,7 +1480,7 @@ NG</content>
             <serverport/>
             <keepalive>30</keepalive>
           </client>
-          <client>
+          <client uuid="1418825a-af62-4b2d-b4e2-71fb582925fd">
             <enabled>1</enabled>
             <name>nvr-user-1</name>
             <pubkey>VioR8C57F0kjDgVg11GYiJJy1AXfi9OB30mioeKCbng=</pubkey>
@@ -1508,17 +1492,17 @@ NG</content>
           </client>
         </clients>
       </client>
-      <general>
+      <general version="0.0.1">
         <enabled>1</enabled>
       </general>
-      <server>
+      <server version="1.0.0">
         <servers>
-          <server>
+          <server uuid="22a0d263-b4ac-47c8-b38d-cef0fd233f79">
             <enabled>1</enabled>
             <name>skyline-vpn</name>
             <instance>1</instance>
-            <pubkey></pubkey>
-            <privkey></privkey>
+            <pubkey>bU+yT+JY3BtOCa5921i7/amF3fl9AinKyoQthtIO3wQ=</pubkey>
+            <privkey>EHNxeyYG1JJdzhLnV9bxw5ofTHVG8IyLeeMSnxDe8XY=</privkey>
             <port>51820</port>
             <mtu/>
             <dns/>
@@ -1526,21 +1510,21 @@ NG</content>
             <disableroutes>0</disableroutes>
             <gateway/>
             <carp_depend_on/>
-            <peers></peers>
+            <peers>ffca1d2e-c782-44a3-a13c-18e10785a7d8,51944a26-e1d5-47a1-815f-6e3708ad9425,1418825a-af62-4b2d-b4e2-71fb582925fd,c8dde76f-10b8-4c13-a0bf-45344ba39c43</peers>
             <endpoint/>
             <peer_dns/>
           </server>
         </servers>
       </server>
     </wireguard>
-    <Gateways>
-      <gateway_item>
+    <Gateways version="1.0.0">
+      <gateway_item uuid="eaf004d7-3421-433f-ae4f-e3ac00e74dc2">
         <disabled>0</disabled>
         <name>LAN_GW</name>
         <descr/>
         <interface>lan</interface>
         <ipprotocol>inet</ipprotocol>
-        <gateway>yyy.yyy.yyy.yyy</gateway>
+        <gateway>10.0.0.4</gateway>
         <defaultgw>0</defaultgw>
         <fargw>0</fargw>
         <monitor_disable>1</monitor_disable>
@@ -1560,7 +1544,7 @@ NG</content>
         <data_length/>
       </gateway_item>
     </Gateways>
-    <Syslog>
+    <Syslog version="1.0.2">
       <general>
         <enabled>1</enabled>
         <loglocal>1</loglocal>
@@ -1569,16 +1553,16 @@ NG</content>
       </general>
       <destinations/>
     </Syslog>
-    <DHCRelay/>
+    <DHCRelay version="1.0.1"/>
     <Kea>
-      <ctrl_agent>
+      <ctrl_agent version="0.0.1">
         <general>
           <enabled>0</enabled>
           <http_host>127.0.0.1</http_host>
           <http_port>8000</http_port>
         </general>
       </ctrl_agent>
-      <dhcp4>
+      <dhcp4 version="1.0.3">
         <general>
           <enabled>0</enabled>
           <interfaces/>
@@ -1596,7 +1580,7 @@ NG</content>
         <ha_peers/>
       </dhcp4>
     </Kea>
-    <IPsec>
+    <IPsec version="1.0.4">
       <general>
         <enabled/>
         <preferred_oldsa>0</preferred_oldsa>
@@ -1672,7 +1656,7 @@ NG</content>
       <keyPairs/>
       <preSharedKeys/>
     </IPsec>
-    <Swanctl>
+    <Swanctl version="1.0.0">
       <Connections/>
       <locals/>
       <remotes/>
@@ -1682,7 +1666,7 @@ NG</content>
       <SPDs/>
     </Swanctl>
     <trust>
-      <general>
+      <general version="1.0.1">
         <store_intermediate_certs>0</store_intermediate_certs>
         <install_crls>0</install_crls>
         <fetch_crls>0</fetch_crls>
@@ -1696,7 +1680,7 @@ NG</content>
         <MinProtocol_DTLS/>
       </general>
     </trust>
-    <monit>
+    <monit version="1.0.13">
       <general>
         <enabled>0</enabled>
         <interval>120</interval>
@@ -1721,7 +1705,7 @@ NG</content>
         <mmonitTimeout>5</mmonitTimeout>
         <mmonitRegisterCredentials>1</mmonitRegisterCredentials>
       </general>
-      <alert>
+      <alert uuid="5fc33bbe-58c5-4c1c-b4a9-b6694ffb67db">
         <enabled>0</enabled>
         <recipient>root@localhost.local</recipient>
         <noton>0</noton>
@@ -1730,7 +1714,7 @@ NG</content>
         <reminder/>
         <description/>
       </alert>
-      <service>
+      <service uuid="c731379f-5037-424c-bdf1-f56e2198dd73">
         <enabled>1</enabled>
         <name>$HOST</name>
         <description/>
@@ -1744,11 +1728,11 @@ NG</content>
         <interface/>
         <start/>
         <stop/>
-        <tests>,,,</tests>
+        <tests>0d69cd5b-86b6-4252-b2ff-5b37c11a078f,dc829028-eba0-413e-b5c0-a8ef97246477,2b2ffe81-0540-4c23-8d2f-3805f81d15ea,9b99cb7d-ebba-42ca-8227-daef0efc9737</tests>
         <depends/>
         <polltime/>
       </service>
-      <service>
+      <service uuid="f89e9f07-777b-413d-b265-aded9aec0309">
         <enabled>1</enabled>
         <name>RootFs</name>
         <description/>
@@ -1762,11 +1746,11 @@ NG</content>
         <interface/>
         <start/>
         <stop/>
-        <tests></tests>
+        <tests>ff9765f2-a00c-4209-83a2-bb780bfa8971</tests>
         <depends/>
         <polltime/>
       </service>
-      <service>
+      <service uuid="9574afb2-a3e7-4e8f-a57b-c79f206d4ae1">
         <enabled>0</enabled>
         <name>carp_status_change</name>
         <description/>
@@ -1780,11 +1764,11 @@ NG</content>
         <interface/>
         <start/>
         <stop/>
-        <tests></tests>
+        <tests>aa9847dc-e2c4-41ca-9619-b13ed5de8240</tests>
         <depends/>
         <polltime/>
       </service>
-      <service>
+      <service uuid="2471bef0-b9dc-468a-8eed-e5f125f4e963">
         <enabled>0</enabled>
         <name>gateway_alert</name>
         <description/>
@@ -1798,81 +1782,81 @@ NG</content>
         <interface/>
         <start/>
         <stop/>
-        <tests></tests>
+        <tests>0685217c-0813-4277-9875-ec817c579906</tests>
         <depends/>
         <polltime/>
       </service>
-      <test>
+      <test uuid="88edbcab-4ffa-47eb-a065-5478cd2fda1b">
         <name>Ping</name>
         <type>NetworkPing</type>
         <condition>failed ping</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="7da546e9-647a-4341-988b-0d39eae850ea">
         <name>NetworkLink</name>
         <type>NetworkInterface</type>
         <condition>failed link</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="27d49fe9-c16a-49d0-913f-d3d959d3f10b">
         <name>NetworkSaturation</name>
         <type>NetworkInterface</type>
         <condition>saturation is greater than 75%</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="0d69cd5b-86b6-4252-b2ff-5b37c11a078f">
         <name>MemoryUsage</name>
         <type>SystemResource</type>
         <condition>memory usage is greater than 75%</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="dc829028-eba0-413e-b5c0-a8ef97246477">
         <name>CPUUsage</name>
         <type>SystemResource</type>
         <condition>cpu usage is greater than 75%</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="2b2ffe81-0540-4c23-8d2f-3805f81d15ea">
         <name>LoadAvg1</name>
         <type>SystemResource</type>
         <condition>loadavg (1min) is greater than 2</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="9b99cb7d-ebba-42ca-8227-daef0efc9737">
         <name>LoadAvg5</name>
         <type>SystemResource</type>
         <condition>loadavg (5min) is greater than 1.5</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="57645090-044e-4cc7-b91a-434fc5651fe0">
         <name>LoadAvg15</name>
         <type>SystemResource</type>
         <condition>loadavg (15min) is greater than 1</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="ff9765f2-a00c-4209-83a2-bb780bfa8971">
         <name>SpaceUsage</name>
         <type>SpaceUsage</type>
         <condition>space usage is greater than 75%</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="aa9847dc-e2c4-41ca-9619-b13ed5de8240">
         <name>ChangedStatus</name>
         <type>ProgramStatus</type>
         <condition>changed status</condition>
         <action>alert</action>
         <path/>
       </test>
-      <test>
+      <test uuid="0685217c-0813-4277-9875-ec817c579906">
         <name>NonZeroStatus</name>
         <type>ProgramStatus</type>
         <condition>status != 0</condition>
@@ -1881,9 +1865,9 @@ NG</content>
       </test>
     </monit>
     <Interfaces>
-      <vxlans/>
-      <neighbors/>
-      <loopbacks/>
+      <vxlans version="1.0.2"/>
+      <neighbors version="1.0.0"/>
+      <loopbacks version="1.0.0"/>
     </Interfaces>
     <Nginx version="1.34">
       <general>
@@ -1907,9 +1891,9 @@ NG</content>
         <bots_ua>Python-urllib,Nmap,python-requests,libwww-perl,MJ12bot,Jorgee,fasthttp,libwww,Telesphoreo,A6-Indexer,ltx71,okhttp,ZmEu,sqlmap,LMAO/2.0,l9explore,l9tcpid,Masscan,zgrab,Ronin/2.0,Hakai/2.0,Indy\sLibrary,^Mozilla/[\d\.]+$,Morfeus\sFucking\sScanner,MSIE\s[0-6]\.\d+</bots_ua>
         <headers_more_enable>0</headers_more_enable>
       </http>
-      <upstream>
+      <upstream uuid="c90bbdf5-2f0a-42b4-850c-03e757cea85a">
         <description>zoneminder vm ui</description>
-        <serverentries></serverentries>
+        <serverentries>4d217530-03ac-4ffb-89cd-b67de73eb574</serverentries>
         <load_balancing_algorithm/>
         <keepalive/>
         <keepalive_requests/>
@@ -1927,9 +1911,9 @@ NG</content>
         <tls_verify>1</tls_verify>
         <tls_verify_depth>1</tls_verify_depth>
       </upstream>
-      <upstream>
+      <upstream uuid="1b9893e9-251d-45fc-affb-79811ba7f3cd">
         <description>zoneminder vm rtmp</description>
-        <serverentries></serverentries>
+        <serverentries>4f2a1f1e-ff5d-4770-8176-58f5c7771395</serverentries>
         <load_balancing_algorithm/>
         <keepalive/>
         <keepalive_requests/>
@@ -1947,7 +1931,7 @@ NG</content>
         <tls_verify>1</tls_verify>
         <tls_verify_depth>1</tls_verify_depth>
       </upstream>
-      <upstream_server>
+      <upstream_server uuid="4d217530-03ac-4ffb-89cd-b67de73eb574">
         <description>zoneminder vm</description>
         <server>10.0.0.5</server>
         <port>80</port>
@@ -1957,7 +1941,7 @@ NG</content>
         <fail_timeout>5</fail_timeout>
         <no_use/>
       </upstream_server>
-      <upstream_server>
+      <upstream_server uuid="4f2a1f1e-ff5d-4770-8176-58f5c7771395">
         <description>zoneminder rtmp</description>
         <server>10.0.0.5</server>
         <port>1935</port>
@@ -1967,7 +1951,7 @@ NG</content>
         <fail_timeout>10</fail_timeout>
         <no_use/>
       </upstream_server>
-      <location>
+      <location uuid="40e83a8a-f660-4bec-8b77-3e800be933e0">
         <description>zoneminder web ui</description>
         <urlpattern>/</urlpattern>
         <matchtype/>
@@ -1977,7 +1961,7 @@ NG</content>
         <xss_block_score/>
         <sqli_block_score/>
         <custom_policy/>
-        <upstream></upstream>
+        <upstream>c90bbdf5-2f0a-42b4-850c-03e757cea85a</upstream>
         <path_prefix/>
         <cache_path/>
         <cache_use_stale/>
@@ -2018,7 +2002,7 @@ NG</content>
         <proxy_ssl_server_name>0</proxy_ssl_server_name>
         <errorpages/>
       </location>
-      <http_server>
+      <http_server uuid="7f9814b7-962c-4e99-8875-305dc0c1d9f8">
         <servername>zoneminder-vm</servername>
         <syslog_targets/>
         <listen_http_address>80,[::]:80</listen_http_address>
@@ -2029,7 +2013,7 @@ NG</content>
         <trusted_proxies/>
         <trusted_proxies_alias/>
         <real_ip_source/>
-        <locations></locations>
+        <locations>40e83a8a-f660-4bec-8b77-3e800be933e0</locations>
         <rewrites/>
         <root/>
         <certificate>598102500f355</certificate>
@@ -2067,7 +2051,7 @@ NG</content>
         <zero_rtt>0</zero_rtt>
         <errorpages/>
       </http_server>
-      <stream_server>
+      <stream_server uuid="f9cc0a49-d8be-42ae-a395-aeab819e5f76">
         <listen_address>1935</listen_address>
         <syslog_targets/>
         <udp>0</udp>
@@ -2079,35 +2063,35 @@ NG</content>
         <access_log_format>main</access_log_format>
         <error_log_level>info</error_log_level>
         <route_field>upstream</route_field>
-        <upstream></upstream>
+        <upstream>1b9893e9-251d-45fc-affb-79811ba7f3cd</upstream>
         <sni_upstream_map/>
         <ip_acl/>
         <proxy_responses/>
         <proxy_connect_timeout/>
         <proxy_timeout/>
       </stream_server>
-      <ban>
+      <ban uuid="1e064473-faa6-48b1-8dcf-47c4666b3223">
         <ip>185.224.128.90</ip>
         <time>1743977340</time>
       </ban>
-      <ban>
+      <ban uuid="95ea3036-e920-44af-9a2b-8b7ab33286e3">
         <ip>159.65.26.72</ip>
         <time>1743977340</time>
       </ban>
-      <ban>
+      <ban uuid="ce0f7372-a5a5-4f61-8f52-a16b95a5ea09">
         <ip>162.243.238.100</ip>
         <time>1743977340</time>
       </ban>
-      <ban>
+      <ban uuid="e2d86acb-0ae0-427b-a77c-39a8b8105f79">
         <ip>34.140.220.111</ip>
         <time>1743977340</time>
       </ban>
     </Nginx>
-    <AcmeClient>
+    <AcmeClient version="4.2.0">
       <settings>
         <enabled>1</enabled>
         <autoRenewal>1</autoRenewal>
-        <UpdateCron></UpdateCron>
+        <UpdateCron>26d71a85-7f02-4f74-ac0a-4b60928a1751</UpdateCron>
         <environment/>
         <challengePort>43580</challengePort>
         <TLSchallengePort>43581</TLSchallengePort>
@@ -2121,7 +2105,7 @@ NG</content>
         <showIntro>1</showIntro>
       </settings>
       <accounts>
-        <account>
+        <account uuid="03f95a24-6ae1-486a-91fa-145ae2dc2ad7">
           <id>67f2d5bc56e771.98580535</id>
           <enabled>1</enabled>
           <name>Skyline Info Solutions TEST</name>
@@ -2137,17 +2121,17 @@ NG</content>
         </account>
       </accounts>
       <certificates>
-        <certificate>
+        <certificate uuid="2933c3a5-a0f6-437e-869f-d0961422dd04">
           <id>67f2e5138dc443.51086883</id>
           <enabled>1</enabled>
           <name>skyline.eastus.cloudapp.azure.com</name>
           <description>Skyline Info Solutions Ltd.</description>
           <altNames>skyline6.eastus.cloudapp.azure.com</altNames>
-          <account></account>
-          <validationMethod></validationMethod>
+          <account>03f95a24-6ae1-486a-91fa-145ae2dc2ad7</account>
+          <validationMethod>b8f21e30-6753-45cb-a59b-3ca4d74ac710</validationMethod>
           <keyLength>key_ec384</keyLength>
           <ocsp>0</ocsp>
-          <restartActions></restartActions>
+          <restartActions>a75edbef-6ddd-4572-a84f-1ec32a703f8d</restartActions>
           <autoRenewal>1</autoRenewal>
           <renewInterval>60</renewInterval>
           <aliasmode>none</aliasmode>
@@ -2156,11 +2140,11 @@ NG</content>
           <certRefId/>
           <lastUpdate/>
           <statusCode>400</statusCode>
-          <statusLastUpdate>1745733616</statusLastUpdate>
+          <statusLastUpdate>1746165616</statusLastUpdate>
         </certificate>
       </certificates>
       <validations>
-        <validation>
+        <validation uuid="b8f21e30-6753-45cb-a59b-3ca4d74ac710">
           <id>67f2e3d918c677.25431930</id>
           <enabled>1</enabled>
           <name>Skyline Info Solutions TEST</name>
@@ -2412,7 +2396,7 @@ NG</content>
         </validation>
       </validations>
       <actions>
-        <action>
+        <action uuid="a75edbef-6ddd-4572-a84f-1ec32a703f8d">
           <id>67f2e448297619.61559012</id>
           <enabled>1</enabled>
           <name>Restart opn web ui on cert renewal</name>
@@ -2473,7 +2457,7 @@ NG</content>
       </actions>
     </AcmeClient>
   </OPNsense>
-  <cert>
+  <cert uuid="da837eed-c08f-4e65-9fd2-c7a2a7839e5b">
     <refid>598102500f355</refid>
     <descr>Web GUI SSL certificate</descr>
     <caref/>
@@ -2481,7 +2465,7 @@ NG</content>
     <csr/>
     <prv>LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tCk1JSUpRd0lCQURBTkJna3Foa2lHOXcwQkFRRUZBQVNDQ1Mwd2dna3BBZ0VBQW9JQ0FRQzNacGVrUzJobmg1N0wKUGQzRUZPS0g5V3Brd3FnZmQ4R2YxSmUwTkxZRkZ4TW12K3UrZjZ1RkpJMnpFK3FmTmN0Qm9lelpBYm44d09LVwp1UzNHNDBLVXRLckozYWIyYWpJTmhvV1hPd0hTdWZScWZJZTZuakFpcytDU25aeFh1OWlLdE9GQTQwWWtmWGh5CkZNbnVzMzNZNkZ6QXJiR3RXaGlpZG1lcFhkU1YrMk8vZGJNbVNwTDV6aks1RzFCUGVLdnpmMjhzWkp2YUpSMTIKMzR1U2ZZMDZETDJJbEhUR0VXOWJzL056NmdZNWl5eUpXWmxwb2xOM1pwZURKLzhMWGFEa0c5cjB1eTdLSVMxMApCV2JMZUNmQmxpRXdXSG5CSU1qeGNacXcrR0pvdUJhN0p4YVJxWGhtZzc1cXczL2QyL1grRnMzWXN5U1o4bE4xCkwwZXdhM2JHdUM2cVQxdit6dlVObFpwQy91V1V3bElEd3ZDUDJudHpzWkRNUXE4M2hMbWtJWU5adlFWQkdqbzQKVEZTN28vUlhXL2RpeTBCYUwwcGU3djFNaUk5VjZ0N3E1NnRIdjVEMkFrTUo3Q1A1Z3Q4VXMvaHJHREhUWEtpRQpPeHVDcU5KRzgwNVNhOTFXMGNKbHl0RFJoNHh3M0U2MCt0U0ttbHNsaGtIRHp5VStsL1FpYVFlTExqakh0enp5CnQ1WU5TbVVFTkxVUVNCMHVrZEYrTlFCaGVEZkk4dTRBTmU5em5Wa2dFeURDeWVjcUk2S3VlQVVqRUxEUVppaTIKMTZNck9IQmljNXhXZXZ5TWN4ODYwM0hqVGtWbTNPVWVjN0hHVmY2SEo3ZHhNVHd3S2dEWFBnWU5hc3FYSzhvVQpIMWRyREZBYTdSLy9PK3hsQ3pKR0VXVTREMFFpMVFJREFRQUJBb0lDQUczcCtXWEluN2kwYWZHcWtUY0x3VHYwClZDQXhIU3RHelc4cHJRV2VOWnhWV08vM1E2VDJ4T2ZWb1dxNnUvbFE5eEROcDdIaXZBR0Q1QWlxMEltSytBTkIKUjc0VnJoT3VUM01WdFFpT242Z1lOQ2lCbTZLM1hXZmUzKzllc0MxUWNoV25FL3ljZVJRemNqVUV5b1RaWThuVQpjSW8xVHUveXVDTGR6WUNPc0hKMnFEQTlyUEY4N2hyeWZpbTcrZVMzRUc2dGFBWjJBWVc2aXE4TWlJeHgzR3IyCjZieHFKSlgwS3dZTmtoRmRKdi9qcmZ4ZkMzZG9ocGRmajl4VjR4OS9ySVlwUDQ4K2cyczJlUlE0aklQUzdoaXkKRGcvNFpuZmRXekNBZ2xJZmVuTUNLUFZmRnNLVGk0bjgyT2tKWTUrbVRRWkx5bkJkNU1peWwxdjZ5djhyV0pINgpNOE0vTm1tbzlmWUR3RlBtWUZDa0hlM0pDcjFod2FKWWJaWmZKcEVLOWxLcnpkOWNpbHdBL2ZnV0w5MUF2cFozCmxqU0wxVDlkQnk0Mm0xRnc5K2dIYldtblJTRC8vRkNKYkFkZWcycGs4c3p0VkRPQXlyaXZxVzF4Z3VBSERIaVIKMUU4V0RiNmF1Q3V2aEc3S1VnUUN5aDFBQjI5ZWZtVEk1S3crRG5GbTN0VjljcFBubkhZWmNQMVF1VSs1S3ZMVwpuMW00Y1pyYlhOQmhqY05Ec3VqR3AwdU1BcWRVRGF5Zm5FTW5aOEV1RGMyeHRtTDJvZjVLUlRGSS85R2wvS29LCnoxYTU4cFJWeDlzQllaWHFXenVSZ3JGeDMxZjQ2elB5Z0VwWjFZbTk3K21VN0dEaFNIemkxQXh4UWQ0eElHOWoKOXBFYlRjRW83Z2FNWDJSYjhScDlBb0lCQVFEaE9UVlpIYStuSG5oaDN4RnVpUzFYenVxYm1HTHk3eXdOdUVYSwpCWk5SaWVsRFR5VHVaS2czZVVhRkMwR2ttQTRPdm9YVGFLRnZaN05hTnJsNm9FdTR0dExUUTFYWTFtc3NsT3NvClZkNitUeDdySVVST1dNcndZWVE1R2tHKzZMQlhmVHlxYjllNVk3aHN2NGQ3RnFhMDlLUG9xdGJwU1dGM1VrSy8KWWJLbVVMbjAvWFhyMGhGeEQyc2VHS0N2STJwSlkwNzhPcjkxRDNpR3c0Q0ZpdzNCcFZTR1lnVkd5cnY3bHdMWgoza3A2cVNSenFKSlM4cDJjbTQyWDlTUnJvWUZONUE1ajNaTkFWR3hPeXNKSjl5d0xvc29Fc0d4UjEzc25mUUxECm9IV2tLVmR6ZElKVVNJaWc0OGVhak5ZcVRqdFB5MXJMMDhHV0s5WmdIbUppK3BZYkFvSUJBUURRZGxaTllkaGEKWXVSUkx0ZGtWcGl6YjZnQk5JOHdsOHZRZEVHd3kyQlc3eXE3ZVRjOFQ1UEpXcDFFZk9tSVpnSndXdkdrY3RuTQpzSHRGeFJUZjBXZEM5T2NVdFEvWDVndVlnYitQN0x0N1NiRkJaSnZQSzk4RFIvMTBDQ3BiSi9rR2owZ2ZjcjdiCkhFTzk2dXhsV0VGYjlNeVp0WldsSVZ4MHRVcnUxTmVKRUthU200TTdyM3c0ZTcwTUoxY3k2SVFLcm93QWExQUYKeU9ad09FeEJFRFB6YU90aDN6VXZjd2dFL3VPdFRLWUg1TXRwMHVST1R1bnZvQlFtTzh3NEh5OXFwLzhpZGNHWAp0bldpSGJMemNXdCtmTndyZWNNODd6NEZQdE5JcjRhay9IT24vRHdQeXRPNVN6WmVoRWk0NXVTVnh0cDhBVlBxCmRJN2UvK0NFTm5uUEFvSUJBREh1SGQ2WXp6VXNjeUczYzBUZkVuZFIvdjdwcEo0WTJkcGN6TlFCc213ME44dGQKUTJHNlhQU1haVVBmZi9qK1lMZHlFM2NQemlKRmlpUm8xMnZSRjVobXA0eUFkQXF6Vm1VMnluOVJzaVRjbzQwYQovZXFra3JFQjNXOVBXOTMzOWdnZlVwQ3laTS9MeExvUEovam94Nko4VGM0cCthVVVTSkJNWTFITVZlKzdHODZ0ClZqUW1pUWxZa3JYRVhmTVYxZDFaTDh5Sk5hSzlBRXBZRXlrSDc4L0xXRmJHYWtjTWNPcFF5eWdEdU4xQ25Ec3IKMXV5ZXJzUm1VOWlwVng2cFdtSXJPZWwzMk1vOUxSbTJwNllBTHZxUloxbnN4c2JLRDVwc2cyMWRLRmR4ZHRxNApyS0FFeUkxcWtmaTRXazVjczVkNERMUDlTUUNDelc3WHJaWWwyWnNDZ2dFQkFLTEZBN1lBUkZLdkROOW0xNy84CjdkYU54SHpNY1ZIYjlNU2JRZit0alZmVC8yWEt6QnBIZUhtc1MwZ0MwTVkwQUl1Q04xUFVhY090dVZOTkEzT1AKcWpWWnpHVWF5M2drbzhFODdqcU8rZ1RXRVpXaDNSYnlobnVsWm4ySE1xdGlsc3RNYldCQTFFMTUwRnNtWjlicQpCbjZxc21jQ3Bnbjk5cGNhUjV3Y2pQNzFCVnRNR2pnc1dhNHd6L2dCYjlETVJPMmlSS2EvSkFpZ1NXNHVSencyClRwb3N2ajM1YnluUmc5MkN1SHZFY1krUVVsUWEyekZaNU1lNkVvR1lCMmw2MENkVGJaK1dtc2EvTFRLY1JmSlkKQ1RzR2UxTm5DODgwYnhUaGJWQS8zYjVOY0hFbVBpK0dpN01PeXpFWjBUNnU2cVVZVTlpbm9NSmNxSUh2QVh1NgpuWGtDZ2dFQkFJeTZtTEpBdThKUWdRY0JESEZLNVo5T2lZOE5td0xwdnZMa2ZUQ0pScmNGb21hdzhZMzYwVytTCm80WDBJckdtbVZVMnhZZjk2ckVZRHplL0M2QVd5c3l0b0VYQldtOXhpRmJMeEhSeFJlLzRjWXd2ZnZPeFBYNlUKbXpvd0ZUVmlqS2NRRDRpdnQyOUdyNE1EcHNQRnR2MzY3d3dvc1ZzOXFrVURXU2pBdUIzMlZvQXpQalRGaUoxRgpod2JDdjhyRjRZL1AzYkhyYnJTM2hBMktpQzRYSE5qQW5vZGVWb1pFRmNnT0d0ME4rUzhYdENnN0tTajRxek52ClhaTklXMGlRU0ZqODl5Tk1BUFlNMWVhMUMwa2VEbkpzQzdQSHN2enFCbVJ5OGZPRGM0TWFMUjZPZmNVUkNRbFgKVW1YR3RKQ2VOVVNtZVUrRHZTV0c4em5rMGswZVUxRT0KLS0tLS1FTkQgUFJJVkFURSBLRVktLS0tLQo=</prv>
   </cert>
-  <cert>
+  <cert uuid="e0b1871c-bda5-4303-863b-38d2711c9264">
     <refid>67c50bb92a842</refid>
     <descr>Web GUI TLS certificate</descr>
     <caref/>
@@ -2594,8 +2578,8 @@ NG</content>
   <gateways>
     
   </gateways>
-  <ifgroups/>
-  <hasync>
+  <ifgroups version="1.0.0"/>
+  <hasync version="1.0.2">
     <disablepreempt>0</disablepreempt>
     <disconnectppps>0</disconnectppps>
     <pfsyncinterface/>
@@ -2607,7 +2591,7 @@ NG</content>
     <password/>
     <syncitems/>
   </hasync>
-  <dnsmasq>
+  <dnsmasq version="1.0.0">
     <enable/>
     <regdhcp/>
     <regdhcpstatic/>
@@ -2627,17 +2611,17 @@ NG</content>
     <local_ttl/>
   </dnsmasq>
   <openvpn/>
-  <staticroutes>
+  <staticroutes version="1.0.0">
     <route/>
   </staticroutes>
-  <gres/>
-  <gifs/>
-  <virtualip/>
-  <vlans/>
-  <laggs/>
+  <gres version="1.0.0"/>
+  <gifs version="1.0.0"/>
+  <virtualip version="1.0.1"/>
+  <vlans version="1.0.0"/>
+  <laggs version="1.0.0"/>
   <ca/>
   <Pischem>
-    <caddy>
+    <caddy version="1.3.5">
       <general>
         <enabled>0</enabled>
         <EnableLayer4>0</EnableLayer4>
@@ -2679,7 +2663,7 @@ NG</content>
         <CopyHeaders/>
       </general>
       <reverseproxy>
-        <reverse>
+        <reverse uuid="b9b729d6-c01f-41c3-89d1-c5edbfa15848">
           <enabled>1</enabled>
           <FromDomain>skyline.eastus.cloudapp.azure.com</FromDomain>
           <FromPort/>
@@ -2695,9 +2679,9 @@ NG</content>
           <ClientAuthMode/>
           <ClientAuthTrustPool/>
         </reverse>
-        <handle>
+        <handle uuid="7eab683d-b06e-42ac-9bdf-76fb7369dd02">
           <enabled>1</enabled>
-          <reverse></reverse>
+          <reverse>b9b729d6-c01f-41c3-89d1-c5edbfa15848</reverse>
           <subdomain/>
           <HandleType>handle</HandleType>
           <HandlePath/>
@@ -2726,7 +2710,7 @@ NG</content>
           <PassiveHealthUnhealthyRequestCount/>
           <description/>
         </handle>
-        <basicauth>
+        <basicauth uuid="5093cd61-8097-436c-818b-a1826ff2db1e">
           <basicauthuser>ian</basicauthuser>
           <basicauthpass>$2y$10$MYKi65AkzrszKer1kkuqxuHKnepC3CXPEA2kVHDB/TQrZaMm.R272</basicauthpass>
           <description>ian's authorized account</description>
