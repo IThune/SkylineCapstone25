@@ -30,7 +30,7 @@ param PublicIPv6DNSLabel string = 'skyline6test'  //skyline6.eastus.cloudapp.azu
 
 ////OPNsense VM Parameters
 //General VM Parameters
-param OPNsenseVirtualMachineSize string = 'Standard_B1s'  //Smallest size VM, free for student subscription
+param OPNsenseVirtualMachineSize string = 'Standard_B2ms'  //Smallest size VM, free for student subscription
 param OPNsenseVirtualMachineName string = 'skyline-gateway'
 
 //OPNsense Networking parameters
@@ -54,7 +54,7 @@ param GithubPrivateToken string
 
 ////Zoneminder VM Parameters
 //General VM Parameters
-param ZoneminderVirtualMachineSize string = 'Standard_B1s'
+param ZoneminderVirtualMachineSize string = 'Standard_B2ms'
 param ZoneminderVirtualMachineName string = 'skyline-nvr'
 
 //Zoneminder Networking Parameters
@@ -220,6 +220,7 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
         }
       }
       //deny-any outbound rule
+      /*
       {
         
         name: 'Deny-InternetOut-Any'
@@ -234,6 +235,7 @@ module UntrustedNSG 'modules/vnet/nsg.bicep' = {
           destinationAddressPrefix: '*'
         }
       }
+      */
     ]
   }
 }
@@ -248,6 +250,34 @@ module TrustedNSG 'modules/vnet/nsg.bicep' = {
       //Default Inbound rules apply
 
       //Outbound rules
+      // Allow https and http outbound for package updates
+      {
+        name: 'Allow-HttpOut-Any'
+        properties: {
+          priority: 4094
+          sourceAddressPrefix: TrustedIPv4Subnet
+          sourcePortRange: '*'
+          protocol: 'tcp'
+          destinationPortRange: '80'
+          access: 'Allow'
+          direction: 'Outbound'
+          destinationAddressPrefix: '*'
+        }
+      }
+      {
+        name: 'Allow-HttpsOut-Any'
+        properties: {
+          priority: 4095
+          sourceAddressPrefix: TrustedIPv4Subnet
+          sourcePortRange: '*'
+          protocol: 'tcp'
+          destinationPortRange: '443'
+          access: 'Allow'
+          direction: 'Outbound'
+          destinationAddressPrefix: '*'
+        }
+      }
+      /*
       //deny-any outbound rule
       {
         name: 'Deny-InternetOut-Any'
@@ -261,7 +291,7 @@ module TrustedNSG 'modules/vnet/nsg.bicep' = {
           sourcePortRange: '*'
           destinationAddressPrefix: '*'
         }
-      }
+      }*/
     ]
   }
 }

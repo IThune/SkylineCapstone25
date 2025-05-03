@@ -38,7 +38,7 @@ var scriptParams = [
   WAAgentActionsConfig
 ]
 
-var runShellScriptCommand = '/bin/sh -c "apt update && apt install curl -y && curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${ZMScriptURI}${ShellScriptName}\\" chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
+var runShellScriptCommand = '/bin/sh -c "curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${ZMScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
 
 
 ////End Parameters
@@ -74,7 +74,7 @@ resource Zoneminder 'Microsoft.Compute/virtualMachines@2023-07-01' = {
     storageProfile: {
       imageReference: {
         publisher: 'Debian'
-        offer: 'debian-12-daily'
+        offer: 'debian-12'
         sku: '12-gen2'
         version: 'latest'
       }
@@ -89,7 +89,7 @@ resource Zoneminder 'Microsoft.Compute/virtualMachines@2023-07-01' = {
           lun: 0
           createOption: 'Empty'
           diskSizeGB: 64
-          managedDisk: {storageAccountType: 'PremiumSSD_LRS'}
+          managedDisk: {storageAccountType: 'Premium_LRS'}
         }
       ]
     }
@@ -119,10 +119,10 @@ resource vmext 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = {
   name: 'ZMCustomScript'
   location: Location
   properties: {
-    publisher: 'Microsoft.OSTCExtensions'
-    type: 'CustomScriptForLinux'
-    typeHandlerVersion: '1.5'
-    autoUpgradeMinorVersion: false
+    publisher: 'Microsoft.Azure.Extensions'
+    type: 'CustomScript'
+    typeHandlerVersion: '2.1'
+    autoUpgradeMinorVersion: true
     settings:{
       commandToExecute: runShellScriptCommand
     }
