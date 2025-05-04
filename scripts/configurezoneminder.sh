@@ -7,4 +7,4 @@
 # $4 - Github API Token to download files
 # $5 - Azure Linux Agent Actions config file name
 
-touch /if-you-are-reading-this-success
+cat "Deploy Success!" > /home/zmadmin/success.txt
