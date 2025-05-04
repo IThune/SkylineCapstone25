@@ -8,24 +8,25 @@
 # $5 - Azure Linux Agent Actions config file name
 
 # Step 1 - Create a filesystem on and mount the 64GB footage disk
-DISK="/dev/disk/azure/scsi1/lun0"
-MOUNT_POINT="/mnt/footage"
+DISK_SYMLINK="/dev/disk/azure/scsi1/lun0"   # specify the data disk as defined in azure which should be lun0
+DISK_UDEV="$(readlink -f $DISK_SYMLINK)"    # get the /dev/sd*
+MOUNT_POINT="/mnt/footage"  # partition mount point
 
 # install necessary utilities
 apt update && apt upgrade -y && apt install parted -y
 
 # Create a partition if not already present
-if ! lsblk "$DISK" | grep -q part; then
-  parted "$DISK" --script mklabel gpt mkpart primary ext4 0% 100%
-  mkfs.ext4 "${DISK}1"
+if ! lsblk "$DISK_SYMLINK" | grep -q part; then
+  parted "$DISK_SYMLINK" --script mklabel gpt mkpart primary ext4 0% 100%
+  mkfs.ext4 "${DISK_UDEV}1"
 fi
 
 # Create mount point and mount the disk
 mkdir -p "$MOUNT_POINT"
-mount "${DISK}1" "$MOUNT_POINT"
+mount "${DISK_UDEV}1" "$MOUNT_POINT"
 
 # Persist in /etc/fstab
-UUID=$(blkid -s UUID -o value "${DISK}1")
+UUID=$(blkid -s UUID -o value "${DISK_UDEV}1")
 echo "UUID=$UUID $MOUNT_POINT ext4 defaults,nofail 0 2" >> /etc/fstab
 
 # Step 2 - Install Zoneminder package and dependencies
