@@ -27,7 +27,8 @@ Instead of pushing the footage upstream to a listening NVR server, we had the mo
 ```bash
 #!/bin/bash
 
-ffmpeg -user_agent "Mozilla/5.0 (X11; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0" \
+ffmpeg -re \
+-user_agent "Mozilla/5.0 (X11; Linux x86_64; rv:138.0) Gecko/20100101 Firefox/138.0" \
 -headers "Origin: https://www.earthcam.com\r\nReferer: https://www.earthcam.com/\r\nAccept-Language: en-US,en;q=0.5\r\n" \
 -i "https://videos-#.earthcam.com/path/to/playlist.m3u8" \
 -vf "scale=1280:720" \
@@ -45,6 +46,7 @@ Here's an explanation of the different flags and what they do:
 #### Input Flags ####
 | Flag | Description |
 | ---------- | ----------- |
+| -re | Instruct ffmpeg to read the source in realtime instead of as fast as it can |
 | -headers   | The HTTP request headers we will send to the server |
 | -i   | The input file URI |
 
