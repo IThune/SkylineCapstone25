@@ -24,7 +24,7 @@ See the links below for documentation on the project:
 
 ## Providing Feedback ##
 
-I am open to feedback on this project. Please use the Discussions tab to provide general feedback or comments. If you are having some sort of issue when deploying/testing then please open an Issue.
+I am open to feedback on this project. Please use the Discussions tab to provide general feedback or comments. If you are having some sort of issue when deploying/testing then you may open an Issue.
 
 ## Credits ##
 
@@ -32,5 +32,7 @@ This repository is based on the [opnazure repository by dmauser](https://github.
 
 ## License ##
 Please see [License](LICENSE)
+
 Files from or otherwise based off of the parent project above are under their respective licenses.
+
 Dependencies are under their respective licenses.
