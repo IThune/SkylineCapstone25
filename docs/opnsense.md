@@ -6,12 +6,7 @@ OPNsense is an all-in-one network security appliance. In the Skyline network, it
 
 We deploy OPNsense as a virtual machine in Azure to allow routing between our cloud-hosted NVR and on-site IP security cameras. It also allows authorized users to access the NVR for playback of footage, and IT admins the ability to remotely manage the network.
 
-
-Through testing, we have found the best balance between cost and performance for the VM's configuration to be the following:
-
-<OPN VM configuration here>
-
-## Firewall Ruleset ##
+The VM deployed in this project is a B2ms-size Azure virtual machine in a 2-nic configuration.
 
 ## Wireguard VPN ##
 
@@ -76,4 +71,4 @@ Now that peers have been assigned to a group in OPNsense, we just need to make s
 
 ## Network Intrusion Detection ##
 
-## Remote Management ##
+An IDS or an Intrusion detection system monitors any outbound connections from your network, so if a device is trying to connect to somewhere it shouldn’t the IDS will block the connection. How the IDS operates is through rulesets and these rulesets are provided through a company called Proofpoint, they are an IT cybersecurity company and offer an updating ruleset. Each rule within a ruleset are different types of attacks and within the rules there are IPs of known threat actors that are associated with these types of attacks. Another thing that Proofpoint does with their ruleset is constantly updating it with new threat actors for attacks, so it is a constantly evolving defensive mechanism. To apply these changes to the ruleset every week, month, or year we can schedule an automatic update to happen to the ruleset and what time it will happen, so around the early morning hours (2 am to 5 am) when no one is working.
