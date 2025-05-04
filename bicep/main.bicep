@@ -352,9 +352,7 @@ module Zoneminder 'modules/VM/zoneminder-host.bicep' = {
     MySQLUsername: ZoneminderMySQLUsername
     MySQLPassword: ZoneminderMySQLPassword
     GithubPrivateToken: GithubPrivateToken
-    WAAgentActionsConfig: AzureAgentActionsConfig
     nicStaticIPv4: ZoneminderTrustedNicPrivateIPv4Address
-    WALinuxVersion: WALinuxVersion
     trustedSubnetId: TrustedSubnet.id
     trustedNsgId: TrustedNSG.outputs.nsgID
   }

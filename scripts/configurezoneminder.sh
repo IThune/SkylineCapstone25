@@ -3,9 +3,6 @@
 # Script Params
 # $1 - Zoneminder Database Username.
 # $2 - Zoneminder Database Password. TODO find and clean stdout/stderr/other logs that would show this pass in the clear
-# $3 - The version of the Azure Linux Agent to install
-# $4 - Github API Token to download files
-# $5 - Azure Linux Agent Actions config file name
 
 # Step 1 - Create a filesystem on and mount the 64GB footage disk
 DISK_SYMLINK="/dev/disk/azure/scsi1/lun0"   # specify the data disk as defined in azure which should be lun0
@@ -38,21 +35,24 @@ CREATE DATABASE zm;
 CREATE USER $1@localhost IDENTIFIED BY '$2';
 GRANT ALL ON zm.* TO $1@localhost;
 FLUSH PRIVILEGES;
-exit;
 EOF
 
 # Step 4 - Configure the ZM database
-mariadb -u $1 -p"$2" < /usr/share/zoneminder/db/zm_create.sql
+mariadb -u $1 -p"$2" zm < /usr/share/zoneminder/db/zm_create.sql
 
 # Step 5 - Set permissions for zm.conf
-chgrp -c www-data /etc/zm/zm.conf
+chgrp -c www-data /etc/zm/zm.conf # allows apache access to the conf
+chmod 0640 /etc/zm/zm.conf  # rw access for root, ro access for www-data group, none for world
 
-# Step 6 - Set the Apache configuration
+# Step 6 - Create custom zm config file
+echo "ZM_DB_PASS=$2" >> /etc/zm/conf.d/skyline.conf
+chgrp -c www-data /etc/zm/conf.d/skyline.conf   # allows apache access to the conf
+chmod 0640 /etc/zm/zm.conf  # rw access for root, ro access for www-data group, none for world
+
+# Step 7 - Set the Apache configuration
 a2enconf zoneminder # enable Zoneminder apache2 config
 a2enmod cgi # enable cgi module
 # reload, start and enable services
 systemctl reload apache2.service
 systemctl restart zoneminder.service
 systemctl status enable zoneminder.service
-
-# Step 7 - perform final configuration of zm.conf
