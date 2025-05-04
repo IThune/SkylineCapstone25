@@ -358,4 +358,7 @@ module Zoneminder 'modules/VM/zoneminder-host.bicep' = {
     trustedSubnetId: TrustedSubnet.id
     trustedNsgId: TrustedNSG.outputs.nsgID
   }
+  dependsOn: [
+    OPNsense
+  ]
 }
