@@ -2,7 +2,7 @@
 
 For testing of the project, we simulated security cameras by first pulling footage from a publically-available source, preparing that footage for transmit, and then sending the footage over the Internet via a secure Wireguard VPN tunnel. This was all accomplished using ffmpeg. We can break down the flow of this process with this picture:
 
-![Diagram of ffmpeg input-output](docs/images/ffmpeg-diagram.png)
+![Diagram of ffmpeg input-output](images/ffmpeg-diagram.png)
 
 ## Getting Footage ##
 
