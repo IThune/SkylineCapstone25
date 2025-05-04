@@ -48,7 +48,7 @@ First, there are 3 different peer groups in our environment, each with its own s
 
 | Peer Group | Description | Subnet |
 | --------- | ----------- | --------------- |
-| CCTV Cameras | Members are CCTV camera that is sending footage to the NVR. | 10.10.255.0/24 |
+| CCTV Cameras | Members are CCTV cameras that are sending footage to the NVR. | 10.10.255.0/24 |
 | NVR Users | These members are users of the NVR system. They are able to log in to the NVR's web interface | 10.10.0.0/24 |
 | IT Admins | Members of this group are allowed to manage IT resources for Skyline. | 10.10.100.0/24 |
 
