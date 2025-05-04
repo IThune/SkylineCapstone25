@@ -9,7 +9,7 @@
 
 # Step 1 - Create a filesystem on and mount the 64GB footage disk
 DISK_SYMLINK="/dev/disk/azure/scsi1/lun0"   # specify the data disk as defined in azure which should be lun0
-DISK_UDEV="$(readlink -f $DISK_SYMLINK)"    # get the /dev/sd*
+DISK_UDEV="$(readlink -f $DISK_SYMLINK)"    # get the /dev/sd* of the datadisk
 MOUNT_POINT="/mnt/footage"  # partition mount point
 
 # install necessary utilities
