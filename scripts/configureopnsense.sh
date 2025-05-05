@@ -4,21 +4,22 @@
 # $1 = OPNScriptURI - path to the github repo which contains the config files and scripts - needs to end with '/'
 # $2 = OpnVersion
 # $3 = WALinuxVersion
-# $4 = github token to download files from the private repo
-# $5 = file name of the OPNsense config file, default config.xml
-# $6 = file name of the waagent actions configuration file, default waagent_actions.conf
+# $4 = file name of the OPNsense config file, default config.xml
+# $5 = file name of the waagent actions configuration file, default waagent_actions.conf
 
 # install necessary utilities
 pkg install -y python3
 
 # download the OPNsense config.xml 
-curl -H "Authorization: Bearer $4" \
-    -H 'Accept: application/vnd.github.v3.raw' \
-    -O \
-    -L "$1$5"
 
+#curl -H "Authorization: Bearer $4" \
+#    -H 'Accept: application/vnd.github.v3.raw' \
+#    -O \
+#    -L "$1$5"
+
+curl -O -L $1$4
 # Drop the config file into the correct directory to finish configuration
-cp $5 /usr/local/etc/config.xml
+cp $4 /usr/local/etc/config.xml
 
 #Download OPNSense Bootstrap and Permit Root Remote Login
 fetch https://raw.githubusercontent.com/opnsense/update/master/src/bootstrap/opnsense-bootstrap.sh.in
@@ -42,14 +43,16 @@ python3 setup.py install --register-service --lnx-distro=freebsd --force
 cd ..
 
 # Download the actions configuration
-curl -H "Authorization: Bearer $4" \
-    -H 'Accept: application/vnd.github.v3.raw' \
-    -O \
-    -L "$1$6"
+#curl -H "Authorization: Bearer $4" \
+#    -H 'Accept: application/vnd.github.v3.raw' \
+#    -O \
+#    -L "$1$5"
+
+curl -O -L $1$5
 # make a link to python3 binary, disable disk swap, and set the actions configuration
 ln -s /usr/local/bin/python3.11 /usr/local/bin/python
 sed -i "" 's/ResourceDisk.EnableSwap=y/ResourceDisk.EnableSwap=n/' /etc/waagent.conf
-cp $6 /usr/local/opnsense/service/conf/actions.d
+cp $5 /usr/local/opnsense/service/conf/actions.d
 
 # Installing bash - This is a requirement for Azure custom Script extension to run
 pkg install -y bash

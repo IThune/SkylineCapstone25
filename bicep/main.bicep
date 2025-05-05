@@ -25,8 +25,8 @@ param UntrustedSubnetName string = 'untrusted'
 param PublicIPDeploymentName string = 'SkylinePublicIP'
 param PublicIPv4AddressName string = 'skyline-public-ipv4'
 param PublicIPv6AddressName string = 'skyline-public-ipv6'
-param PublicIPv4DNSLabel string = 'skylinetest' //skyline.eastus.cloudapp.azure.com will resolve to this public IPv4 address
-param PublicIPv6DNSLabel string = 'skyline6test'  //skyline6.eastus.cloudapp.azure.com will resolve to this public IPv6 address
+param PublicIPv4DNSLabel string //skyline.eastus.cloudapp.azure.com will resolve to this public IPv4 address
+param PublicIPv6DNSLabel string  //skyline6.eastus.cloudapp.azure.com will resolve to this public IPv6 address
 
 ////OPNsense VM Parameters
 //General VM Parameters
@@ -48,9 +48,10 @@ param AzureAgentActionsConfig string = 'actions_waagent.conf'
 param AdminUsername string
 @secure()
 param AdminPassword string
+/*
 @secure()
 param GithubPrivateToken string
-
+*/
 
 ////Zoneminder VM Parameters
 //General VM Parameters
@@ -321,7 +322,7 @@ module OPNsense 'modules/VM/opnsense.bicep' = {
     OPNScriptURI: OPNsenseBootstrapURI
     OPNVersion: OPNsenseVersion
     WALinuxVersion: WALinuxVersion
-    GithubPrivateToken: GithubPrivateToken 
+    //GithubPrivateToken: GithubPrivateToken 
     OPNsenseConfigXML: OPNsenseConfigXMLName
     WAAgentActionsConfig: AzureAgentActionsConfig
     
@@ -351,7 +352,7 @@ module Zoneminder 'modules/VM/zoneminder-host.bicep' = {
     ShellScriptName: ZoneminderShellScriptName
     MySQLUsername: ZoneminderMySQLUsername
     MySQLPassword: ZoneminderMySQLPassword
-    GithubPrivateToken: GithubPrivateToken
+    //GithubPrivateToken: GithubPrivateToken
     nicStaticIPv4: ZoneminderTrustedNicPrivateIPv4Address
     trustedSubnetId: TrustedSubnet.id
     trustedNsgId: TrustedNSG.outputs.nsgID

@@ -33,8 +33,10 @@ param ShellScriptName string
 param OPNScriptURI string
 param OPNVersion string
 param WALinuxVersion string
+/*
 @secure()
 param GithubPrivateToken string
+*/
 param OPNsenseConfigXML string
 param WAAgentActionsConfig string
 
@@ -42,13 +44,13 @@ var scriptParams = [
   OPNScriptURI
   OPNVersion
   WALinuxVersion
-  GithubPrivateToken
+  //GithubPrivateToken
   OPNsenseConfigXML
   WAAgentActionsConfig
 ]
 // Installs curl package, uses curl to securely download the bootstrap script, runs the bootstrap script with the required params
-var runShellScriptCommand = '/bin/sh -c "pkg update && pkg install -y curl && curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${OPNScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
-
+//var runShellScriptCommand = '/bin/sh -c "pkg update && pkg install -y curl && curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${OPNScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
+var runShellScriptCommand = '/bin/sh -c "pkg update && pkg install -y curl && curl ${OPNScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
 //Secrets
 //TODO Azure Key Vault for secure storage and retrieval of secrets
 param AdminUsername string

@@ -26,16 +26,16 @@ param MySQLPassword string // $2 - Password for the db user above. TODO password
 // Deploy configuration parameters
 param ShellScriptName string //The filename of the shell script as it appears on Github
 param ZMScriptURI string //URI to the private github repo that contains config files & scripts. Must end in '/'
-@secure()
-param GithubPrivateToken string
+//@secure()
+//param GithubPrivateToken string
 
 var scriptParams = [
   MySQLUsername
   MySQLPassword
 ]
 
-var runShellScriptCommand = '/bin/sh -c "curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${ZMScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
-
+//var runShellScriptCommand = '/bin/sh -c "curl -H \\"Authorization: Bearer ${GithubPrivateToken}\\" -H \\"Accept: application/vnd.github.v3.raw\\" -O -L \\"${ZMScriptURI}${ShellScriptName}\\" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
+var runShellScriptCommand = '/bin/sh -c "curl -O -L \\"${ZMScriptURI}${ShellScriptName}" && chmod +x \\"${ShellScriptName}\\" && sh \\"${ShellScriptName}\\" ${join(scriptParams, ' ')}"'
 
 ////End Parameters
 ////Begin Resources
