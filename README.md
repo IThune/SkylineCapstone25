@@ -10,15 +10,17 @@ This is a college capstone project for a fictional company which we named Skylin
 
 ## How to deploy the project ##
 
+Please see [HOWTO-deploy](docs/HOWTO-deploy.md)
+
 ## Documentation ##
 
 See the links below for documentation on the project:
 
-[About our Azure Vnets](docs/vnets.md)
+[Azure Vnets](docs/vnets.md)
 
-[The Skyline Gateway: OPNsense](docs/opnsense.md)
+[OPNsense firewall](docs/opnsense.md)
 
-[Our NVR Solution: Zoneminder](docs/zoneminder.md)
+[Zoneminder NVR](docs/zoneminder.md)
 
 [Simulation of CCTV cameras](docs/camera-deployment.md)
 

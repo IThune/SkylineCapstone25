@@ -98,15 +98,6 @@ Azure NSGs are applied to subnets. Alternatively, they can be assigned to a netw
         </tr>
         <tr>
             <td colspan=8>Outbound Rule List</td>
-        </tr>     
-        <tr>
-            <td>4096</td> <!-- Priority -->
-            <td>Deny-InternetOut-Any</td> <!-- Name -->
-            <td>Any</td> <!-- Port -->
-            <td>Any</td> <!-- Protocol -->
-            <td>Any</td> <!-- Source -->
-            <td>Internet</td> <!-- Destination -->
-            <td>❌ Deny</td> <!-- Action -->
         </tr>
         <tr>
             <td>65000</td> <!-- Priority -->
@@ -191,15 +182,6 @@ Also important to note is that NSGs in Azure are stateful, so it will not be nec
         <tr>
             <td colspan=8>Outbound Rule List</td>
         </tr>     
-        <tr>
-            <td>4096</td> <!-- Priority -->
-            <td>Deny-InternetOut-Any</td> <!-- Name -->
-            <td>Any</td> <!-- Port -->
-            <td>Any</td> <!-- Protocol -->
-            <td>Any</td> <!-- Source -->
-            <td>Internet</td> <!-- Destination -->
-            <td>❌ Deny</td> <!-- Action -->
-        </tr>
         <tr>
             <td>65000</td> <!-- Priority -->
             <td>AllowVnetOutBound</td> <!-- Name -->
