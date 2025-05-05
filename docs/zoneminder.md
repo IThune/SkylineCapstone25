@@ -22,8 +22,6 @@ Zoneminder is a free, open-source CCTV software application suite that allows ca
     With Zoneminder, you will get the best of both being an open-source product as well as access to
     remote technical support at reasonable prices.
 
-## Installing and Configuring Zoneminder in a cloud deployment ##
-
 ## Adding Cameras ##
 
-We are simulating security cameras in the project with ffmpeg feeds.
+We are simulating security cameras in the project with ffmpeg feeds. See more about cameras [here](camera-deployment.md)
